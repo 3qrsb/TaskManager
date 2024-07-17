@@ -14,3 +14,9 @@ class Task(models.Model):
     stage = models.CharField(max_length=20, choices=STAGE_CHOICES, default=IN_PROGRESS)
     start_time = models.DateTimeField()
     due_to = models.DateTimeField()
+
+    def __str__(self) -> str:
+        return self.name
+    
+    class Meta:
+        ordering = ['-stage']
