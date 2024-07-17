@@ -15,3 +15,16 @@ def task_list(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.validated_data)
+    
+
+@api_view(['GET', 'PUT'])
+def task_detail(request, id):
+    task = Task.objects.get(pk=id)
+    if request.method == 'GET':
+        serializer = TaskSerializer(task)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = TaskSerializer(task, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
