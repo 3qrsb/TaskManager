@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    ''
+    'rest_framework',
     'task',
 ]
 
@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'task_manager_backend',
         'USER': 'postgres',
-        'PASSWORD': 'isaf',
+        'PASSWORD': '12345',
         'HOST': 'localhost', 
         'PORT': '5432', 
     }
