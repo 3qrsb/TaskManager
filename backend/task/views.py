@@ -6,8 +6,14 @@ from .serializers import TaskSerializer, CategorySerilizer
 
 
 class TaskViewSet(ModelViewSet):
-    queryset = Task.objects.all()
     serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        queryset = Task.objects.all()
+        category_id = self.request.query_params.get('category_id')
+        if category_id is not None:
+            queryset = queryset.filter(category_id=category_id)
+        return queryset
 
 
 class CategoryViewSet(ModelViewSet):
