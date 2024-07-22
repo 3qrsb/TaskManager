@@ -9,7 +9,7 @@ class TaskViewSet(ModelViewSet):
     serializer_class = TaskSerializer
 
     def get_queryset(self):
-        queryset = Task.objects.all()
+        queryset = Task.objects.select_related('category').all()
         category_id = self.request.query_params.get('category_id')
         if category_id is not None:
             queryset = queryset.filter(category_id=category_id)
