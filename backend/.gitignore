@@ -1,5 +1,4 @@
-# Ignore the settings.py file
-backend/settings.py
+.env
 venv/
-pycache/
-*/pycache/
+__pycache__/
+*/__pycache__/
