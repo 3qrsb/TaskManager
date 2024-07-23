@@ -4,7 +4,7 @@ from .models import Task, Category
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ['id', 'title', 'description', 'stage', 'category', 'start_time', 'due_to']
+        fields = ['id', 'title', 'description', 'stage', 'category', 'created_at', 'completion_date']
     
     category = serializers.StringRelatedField()
 

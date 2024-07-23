@@ -24,12 +24,12 @@ class Task(models.Model):
     description = models.TextField()
     stage = models.CharField(max_length=20, choices=STAGE_CHOICES, default=IN_PROGRESS)
     category = models.ForeignKey(Category, null=True, on_delete=models.PROTECT, related_name='tasks')
-    start_time = models.DateTimeField()
-    due_to = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    completion_date = models.DateField(default='2024-07-31')
 
     def __str__(self) -> str:
         return self.title
     
     class Meta:
-        ordering = ['-stage']
+        ordering = ['-stage', 'id']
 
