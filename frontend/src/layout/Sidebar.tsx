@@ -24,16 +24,18 @@ const Sidebar = () => {
 
   const handleToggle = () => setIsCollapsed(!isCollapsed);
 
-  const iconSize = 13;
+  const iconSize = 24;
+  const chevronSize = 13;
   const bgHover = useColorModeValue("blue.200", "gray.700");
   const bgColor = useColorModeValue("gray.100", "gray.800");
+  const iconButtonBgColor = useColorModeValue("gray.300", "gray.700");
 
   const sections = [
-    { icon: MdOutlineDashboard, label: "Dashboard" },
-    { icon: MdAddTask, label: "Tasks" },
-    { icon: MdOutlineNoteAdd, label: "Note" },
-    { icon: MdOutlineCalendarMonth, label: "Calendar" },
-    { icon: FaRegTrashAlt, label: "Trash" },
+    { icon: MdOutlineDashboard, label: "Dashboard", size: iconSize },
+    { icon: MdAddTask, label: "Tasks", size: iconSize },
+    { icon: MdOutlineNoteAdd, label: "Note", size: iconSize },
+    { icon: MdOutlineCalendarMonth, label: "Calendar", size: iconSize },
+    { icon: FaRegTrashAlt, label: "Trash", size: 20 },
   ];
 
   return (
@@ -57,9 +59,9 @@ const Sidebar = () => {
         <IconButton
           icon={
             isCollapsed ? (
-              <FaChevronRight size={iconSize} />
+              <FaChevronRight size={chevronSize} />
             ) : (
-              <FaChevronLeft size={iconSize} />
+              <FaChevronLeft size={chevronSize} />
             )
           }
           aria-label="Toggle Sidebar"
@@ -68,7 +70,7 @@ const Sidebar = () => {
           top={10}
           right={isCollapsed ? "-11px" : "-11px"}
           size="sm"
-          bg={bgColor}
+          bg={iconButtonBgColor}
           zIndex="10"
           className="toggle-btn"
           opacity={isOpen ? 1 : 0}
@@ -90,7 +92,7 @@ const Sidebar = () => {
               p={2}
               borderRadius="md"
             >
-              <section.icon size="24" />
+              <section.icon size={section.size} />
               {!isCollapsed && (
                 <Text ml={4} fontSize="md">
                   {section.label}
