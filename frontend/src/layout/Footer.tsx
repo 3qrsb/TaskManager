@@ -29,7 +29,6 @@ const Footer = () => {
               icon={<FaGithub />}
               aria-label="GitHub"
               variant="outline"
-              colorScheme="whiteAlpha"
             />
           </Link>
           <Link href="https://instagram.com" isExternal>
@@ -37,7 +36,6 @@ const Footer = () => {
               icon={<FaInstagram />}
               aria-label="Instagram"
               variant="outline"
-              colorScheme="whiteAlpha"
             />
           </Link>
           <Link href="https://t.me" isExternal>
@@ -45,7 +43,6 @@ const Footer = () => {
               icon={<FaTelegramPlane />}
               aria-label="Telegram"
               variant="outline"
-              colorScheme="whiteAlpha"
             />
           </Link>
         </Flex>
