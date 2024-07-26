@@ -27,7 +27,7 @@ const Sidebar = () => {
   const iconSize = 24;
   const chevronSize = 13;
   const bgHover = useColorModeValue("blue.200", "gray.700");
-  const bgColor = useColorModeValue("gray.100", "gray.800");
+  const bgColor = useColorModeValue("sidebarBg.light", "sidebarBg.dark");
   const iconButtonBgColor = useColorModeValue("gray.300", "gray.700");
 
   const sections = [
@@ -44,9 +44,8 @@ const Sidebar = () => {
       bg={bgColor}
       w={isCollapsed ? "60px" : "200px"}
       transition="width 0.2s"
-      h="100vh"
+      h="80vh"
       p={4}
-      shadow="md"
       position="relative"
       onMouseEnter={onOpen}
       onMouseLeave={onClose}

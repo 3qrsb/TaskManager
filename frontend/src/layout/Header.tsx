@@ -15,7 +15,7 @@ const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box as="header" bg="#FAF089" p={4} color="dark">
+    <Box as="header" p={4} bg="headerFooterBg">
       <Flex justify="space-between" align="center">
         <Image src="logo.webp" alt="Logo" boxSize="45px" />
         <IconButton
