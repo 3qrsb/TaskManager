@@ -17,6 +17,7 @@ import {
   MdOutlineCalendarMonth,
 } from "react-icons/md";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { Link as RouterLink } from "react-router-dom";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -31,11 +32,21 @@ const Sidebar = () => {
   const iconButtonBgColor = useColorModeValue("gray.300", "gray.700");
 
   const sections = [
-    { icon: MdOutlineDashboard, label: "Dashboard", size: iconSize },
-    { icon: MdAddTask, label: "Tasks", size: iconSize },
-    { icon: MdOutlineNoteAdd, label: "Note", size: iconSize },
-    { icon: MdOutlineCalendarMonth, label: "Calendar", size: iconSize },
-    { icon: FaRegTrashAlt, label: "Trash", size: 20 },
+    {
+      icon: MdOutlineDashboard,
+      label: "Dashboard",
+      path: "/dashboard",
+      size: iconSize,
+    },
+    { icon: MdAddTask, label: "Tasks", path: "/tasks", size: iconSize },
+    { icon: MdOutlineNoteAdd, label: "Note", path: "/note", size: iconSize },
+    {
+      icon: MdOutlineCalendarMonth,
+      label: "Calendar",
+      path: "/calendar",
+      size: iconSize,
+    },
+    { icon: FaRegTrashAlt, label: "Trash", path: "/trash", size: 20 },
   ];
 
   return (
@@ -90,6 +101,8 @@ const Sidebar = () => {
               _hover={{ bg: bgHover }}
               p={2}
               borderRadius="md"
+              as={RouterLink}
+              to={section.path}
             >
               <section.icon size={section.size} />
               {!isCollapsed && (
