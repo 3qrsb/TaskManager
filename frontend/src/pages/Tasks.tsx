@@ -1,29 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
-import { fetchTasks, createTask, Task } from "../redux/tasksSlice";
+import { fetchTasks, Task } from "../redux/tasksSlice";
 import Pagination from "../components/Pagination";
 import {
   Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
   Heading,
-  List,
-  ListItem,
-  Text,
   Spinner,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Text,
+  Badge,
+  Flex,
 } from "@chakra-ui/react";
+import { CheckCircleIcon, InfoIcon } from "@chakra-ui/icons";
 
 const Tasks = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { tasks, status, totalPages } = useSelector(
+  const { tasks, status, totalPages, totalCount } = useSelector(
     (state: RootState) => state.tasksSlice
   );
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
@@ -32,62 +33,88 @@ const Tasks = () => {
     }
   }, [status, dispatch, currentPage]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (title && description) {
-      dispatch(createTask({ title, description }));
-      setTitle("");
-      setDescription("");
-    }
-  };
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     dispatch(fetchTasks(page));
   };
 
+  const getStageIcon = (stage: string) => {
+    switch (stage) {
+      case "completed":
+        return <CheckCircleIcon color="green.500" />;
+      case "in_progress":
+        return <InfoIcon color="blue.500" />;
+      default:
+        return null;
+    }
+  };
+
+  const getStageBadge = (stage: string) => {
+    switch (stage) {
+      case "completed":
+        return <Badge colorScheme="green">Completed</Badge>;
+      case "in_progress":
+        return <Badge colorScheme="blue">In Progress</Badge>;
+      default:
+        return null;
+    }
+  };
+
+  const truncateText = (text: string, maxLength: number) => {
+    return text.length > maxLength
+      ? `${text.substring(0, maxLength)}...`
+      : text;
+  };
+
   return (
-    <Box>
-      <Heading as="h2" size="lg" mb={4}>
+    <Box p={4}>
+      <Heading as="h2" size="lg" mb={2}>
         Tasks
       </Heading>
-      <form onSubmit={handleSubmit}>
-        <FormControl id="title" mb={2}>
-          <FormLabel>Title</FormLabel>
-          <Input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </FormControl>
-        <FormControl id="description" mb={2}>
-          <FormLabel>Description</FormLabel>
-          <Input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </FormControl>
-        <Button type="submit" colorScheme="teal">
-          Add Task
-        </Button>
-      </form>
+      <Text color="gray.500" mb={4}>
+        {totalCount} tasks
+      </Text>
       {status === "loading" && <Spinner />}
       {status === "succeeded" && tasks.length === 0 && (
         <Text>No tasks available.</Text>
       )}
       {status === "succeeded" && tasks.length > 0 && (
         <>
-          <List spacing={3} mt={4}>
-            {tasks.map((task: Task) => (
-              <ListItem key={task.id}>
-                <Heading as="h3" size="md">
-                  {task.title}
-                </Heading>
-                <Text>{task.description}</Text>
-              </ListItem>
-            ))}
-          </List>
+          <Table variant="simple" mt={4} size="sm">
+            <Thead>
+              <Tr>
+                <Th>Title</Th>
+                <Th>Description</Th>
+                <Th>Stage</Th>
+                <Th>Category</Th>
+                <Th>Created At</Th>
+                <Th>Due Date</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {tasks.map((task: Task) => (
+                <Tr key={task.id}>
+                  <Td>
+                    <Text isTruncated>{truncateText(task.title, 30)}</Text>
+                  </Td>
+                  <Td>
+                    <Text isTruncated>
+                      {truncateText(task.description, 30)}
+                    </Text>
+                  </Td>
+                  <Td>
+                    <Flex align="center">
+                      {getStageIcon(task.stage)}
+                      <Text ml={2}>{getStageBadge(task.stage)}</Text>
+                    </Flex>
+                  </Td>
+                  <Td>{task.category}</Td>
+                  <Td>{new Date(task.created_at).toLocaleDateString()}</Td>
+                  <Td>{new Date(task.completion_date).toLocaleDateString()}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
