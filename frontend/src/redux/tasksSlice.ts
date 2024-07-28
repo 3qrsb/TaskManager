@@ -5,6 +5,10 @@ export interface Task {
   id: number;
   title: string;
   description: string;
+  stage: string;
+  category: string | null;
+  created_at: string;
+  completion_date: string;
 }
 
 interface TasksResponse {
@@ -16,12 +20,14 @@ interface TasksState {
   tasks: Task[];
   status: "idle" | "loading" | "succeeded" | "failed";
   totalPages: number;
+  totalCount: number;
 }
 
 const initialState: TasksState = {
   tasks: [],
   status: "idle",
   totalPages: 1,
+  totalCount: 0,
 };
 
 export const fetchTasks = createAsyncThunk(
@@ -30,7 +36,8 @@ export const fetchTasks = createAsyncThunk(
     const response = await api.get<TasksResponse>(`/tasks/?page=${page}`);
     return {
       tasks: response.results,
-      totalPages: Math.ceil(response.count / 15), // Assuming PAGE_SIZE is 15
+      totalPages: Math.ceil(response.count / 15),
+      totalCount: response.count,
     };
   }
 );
@@ -59,11 +66,16 @@ const tasksSlice = createSlice({
         fetchTasks.fulfilled,
         (
           state,
-          action: PayloadAction<{ tasks: Task[]; totalPages: number }>
+          action: PayloadAction<{
+            tasks: Task[];
+            totalPages: number;
+            totalCount: number;
+          }>
         ) => {
           state.status = "succeeded";
           state.tasks = action.payload.tasks;
           state.totalPages = action.payload.totalPages;
+          state.totalCount = action.payload.totalCount;
         }
       )
       .addCase(fetchTasks.rejected, (state) => {
