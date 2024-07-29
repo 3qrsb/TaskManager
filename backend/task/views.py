@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, DestroyModelMixin, ListModelMixin
 from rest_framework.pagination import PageNumberPagination
 from .models import Task, Category, Note
-from .serializers import TaskSerializer, AddTaskSerializer, CategorySerilizer, NoteSerializer
+from .serializers import TaskSerializer, AddTaskSerializer, UpdateStageSerializer, CategorySerilizer, NoteSerializer
 
 
 class TaskViewSet(ModelViewSet):
@@ -23,6 +23,8 @@ class TaskViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return AddTaskSerializer
+        elif self.request.method == 'PATCH':
+            return UpdateStageSerializer
         return TaskSerializer
 
 
