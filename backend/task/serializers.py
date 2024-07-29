@@ -17,6 +17,12 @@ class AddTaskSerializer(serializers.ModelSerializer):
         fields = ['title', 'description', 'category', 'completion_date']
 
 
+class UpdateStageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['stage']
+
+
 class CategorySerilizer(serializers.ModelSerializer):
     class Meta:
         model = Category
