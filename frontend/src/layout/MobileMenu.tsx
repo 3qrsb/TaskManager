@@ -19,25 +19,13 @@ const MobileMenu = ({ isOpen, onClose }: any) => {
           <DrawerBody>
             <VStack align="start" spacing={4}>
               <SearchBar onSearch={(query: string) => console.log(query)} />
-              <Button
-                variant="ghost"
-                colorScheme="whiteAlpha"
-                onClick={onClose}
-              >
+              <Button variant="ghost" onClick={onClose}>
                 Home
               </Button>
-              <Button
-                variant="ghost"
-                colorScheme="whiteAlpha"
-                onClick={onClose}
-              >
+              <Button variant="ghost" onClick={onClose}>
                 Tasks
               </Button>
-              <Button
-                variant="ghost"
-                colorScheme="whiteAlpha"
-                onClick={onClose}
-              >
+              <Button variant="ghost" onClick={onClose}>
                 Profile
               </Button>
               <ColorModeSwitch />
