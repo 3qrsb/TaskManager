@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'task',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +148,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'PAGE_SIZE': 15
 }
+
+AUTH_USER_MODEL = 'core.User'
