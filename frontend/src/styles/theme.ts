@@ -9,7 +9,7 @@ const theme = extendTheme({
   config,
   colors: {
     primary: {
-      50: "#e3f2fd",
+      50: "#e3f2fd", // Blue
       100: "#bbdefb",
       200: "#90caf9",
       300: "#64b5f6",
@@ -21,7 +21,7 @@ const theme = extendTheme({
       900: "#0d47a1",
     },
     secondary: {
-      50: "#e0f7fa",
+      50: "#e0f7fa", // Something like teal
       100: "#b2ebf2",
       200: "#80deea",
       300: "#4dd0e1",
@@ -33,7 +33,7 @@ const theme = extendTheme({
       900: "#006064",
     },
     accent: {
-      50: "#fff3e0",
+      50: "#fff3e0", // Orange
       100: "#ffe0b2",
       200: "#ffcc80",
       300: "#ffb74d",
@@ -45,11 +45,19 @@ const theme = extendTheme({
       900: "#e65100",
     },
     background: {
-      light: "#f0f0f0",
+      light: "#F5F5F5", // Very Light Gray
       dark: "#1a202c",
     },
+    sidebarBg: {
+      light: "#E0E0E0", // Light Gray
+      dark: "#2D3748",
+    },
+    headerFooterBg: {
+      light: "#FFFFFF", // White
+      dark: "#2D3748",
+    },
     text: {
-      light: "#000000",
+      light: "#333333", // Dark Gray
       dark: "#ffffff",
     },
   },
@@ -58,6 +66,21 @@ const theme = extendTheme({
       body: {
         bg: props.colorMode === "dark" ? "background.dark" : "background.light",
         color: props.colorMode === "dark" ? "text.dark" : "text.light",
+      },
+      header: {
+        bg:
+          props.colorMode === "dark"
+            ? "headerFooterBg.dark"
+            : "headerFooterBg.light",
+      },
+      footer: {
+        bg:
+          props.colorMode === "dark"
+            ? "headerFooterBg.dark"
+            : "headerFooterBg.light",
+      },
+      sidebar: {
+        bg: props.colorMode === "dark" ? "sidebarBg.dark" : "sidebarBg.light",
       },
     }),
   },

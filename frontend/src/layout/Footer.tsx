@@ -3,7 +3,13 @@ import { FaGithub, FaInstagram, FaTelegramPlane } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <Box as="footer" bg="secondary.200" p={4} color="dark" textAlign="center">
+    <Box
+      as="footer"
+      bg="headerFooterBg"
+      p={4}
+      color="text.light"
+      textAlign="center"
+    >
       <Flex
         justify="space-between"
         align="center"
@@ -24,28 +30,28 @@ const Footer = () => {
         </Text>
 
         <Flex gap={4} mt={{ base: 2, md: 0 }}>
-          <Link href="https://github.com" isExternal>
+          <Link href="#" isExternal>
             <IconButton
               icon={<FaGithub />}
               aria-label="GitHub"
-              variant="outline"
-              colorScheme="whiteAlpha"
+              variant="ghost"
+              _hover={{ bg: "secondary.300" }}
             />
           </Link>
-          <Link href="https://instagram.com" isExternal>
+          <Link href="#" isExternal>
             <IconButton
               icon={<FaInstagram />}
               aria-label="Instagram"
-              variant="outline"
-              colorScheme="whiteAlpha"
+              variant="ghost"
+              _hover={{ bg: "secondary.300" }}
             />
           </Link>
-          <Link href="https://t.me" isExternal>
+          <Link href="#" isExternal>
             <IconButton
               icon={<FaTelegramPlane />}
               aria-label="Telegram"
-              variant="outline"
-              colorScheme="whiteAlpha"
+              variant="ghost"
+              _hover={{ bg: "secondary.300" }}
             />
           </Link>
         </Flex>
