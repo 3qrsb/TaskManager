@@ -3,7 +3,7 @@ from .models import Task, Category, Note
 from datetime import date
 
 class TaskSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
+    category = serializers.StringRelatedField()
 
     class Meta:
         model = Task
@@ -11,8 +11,6 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class AddTaskSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
-    
     class Meta:
         model = Task
         fields = ['title', 'description', 'category', 'completion_date']
