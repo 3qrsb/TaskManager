@@ -51,6 +51,16 @@ const Tasks = () => {
     setSelectedTask(null);
   };
 
+  const handleSave = (updatedTask: Task) => {
+    console.log("Task saved:", updatedTask);
+    dispatch(fetchTasks(currentPage));
+  };
+
+  const handleDelete = (taskId: number) => {
+    console.log("Task deleted:", taskId);
+    dispatch(fetchTasks(currentPage));
+  };
+
   const getStageIcon = (stage: string) => {
     switch (stage) {
       case "completed":
@@ -140,6 +150,8 @@ const Tasks = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         task={selectedTask}
+        onSave={handleSave}
+        onDelete={handleDelete}
       />
     </Box>
   );
