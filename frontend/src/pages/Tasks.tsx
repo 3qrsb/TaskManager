@@ -1,8 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../redux/store";
-import { fetchTasks, Task } from "../redux/tasksSlice";
-import Pagination from "../components/Pagination";
 import {
   Box,
   Heading,
@@ -14,10 +10,15 @@ import {
   Th,
   Td,
   Text,
-  Badge,
   Flex,
+  Badge,
 } from "@chakra-ui/react";
 import { CheckCircleIcon, InfoIcon } from "@chakra-ui/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../redux/store";
+import { fetchTasks, Task } from "../redux/tasksSlice";
+import Pagination from "../components/Pagination";
+import TaskDetailsModal from "../components/TaskDetailsModal";
 
 const Tasks = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -26,6 +27,8 @@ const Tasks = () => {
   );
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (status === "idle") {
@@ -36,6 +39,16 @@ const Tasks = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     dispatch(fetchTasks(page));
+  };
+
+  const handleRowClick = (task: Task) => {
+    setSelectedTask(task);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedTask(null);
   };
 
   const getStageIcon = (stage: string) => {
@@ -93,7 +106,7 @@ const Tasks = () => {
             </Thead>
             <Tbody>
               {tasks.map((task: Task) => (
-                <Tr key={task.id}>
+                <Tr key={task.id} onClick={() => handleRowClick(task)}>
                   <Td>
                     <Text isTruncated>{truncateText(task.title, 30)}</Text>
                   </Td>
@@ -123,6 +136,11 @@ const Tasks = () => {
         </>
       )}
       {status === "failed" && <Text>Error loading tasks.</Text>}
+      <TaskDetailsModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        task={selectedTask}
+      />
     </Box>
   );
 };
