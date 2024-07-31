@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -7,83 +7,148 @@ import {
   ModalFooter,
   ModalBody,
   Button,
-  Text,
-  Box,
-  Badge,
-  Flex,
+  Input,
+  Textarea,
+  Select,
+  Grid,
+  GridItem,
   IconButton,
 } from "@chakra-ui/react";
-import { DeleteIcon, CalendarIcon } from "@chakra-ui/icons";
+import { DeleteIcon } from "@chakra-ui/icons";
+import api from "../utils/api";
+import { Task } from "../redux/tasksSlice";
 
-const TaskDetailsModal = ({ isOpen, onClose, task }: any) => {
-  if (!task) return null;
+interface TaskDetailsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  task: Task | null;
+  onSave: (task: Task) => void;
+  onDelete: (taskId: number) => void;
+}
+
+const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
+  isOpen,
+  onClose,
+  task,
+  onSave,
+  onDelete,
+}) => {
+  const [editedTask, setEditedTask] = useState<Task | null>(task);
+
+  useEffect(() => {
+    if (task) {
+      setEditedTask(task);
+    }
+  }, [task]);
+
+  const handleInputChange = (field: keyof Task, value: any) => {
+    setEditedTask((prev) => (prev ? { ...prev, [field]: value } : null));
+  };
+
+  const handleSave = async () => {
+    if (editedTask) {
+      try {
+        const updatedTask = await api.put<Task, Task>(
+          `/tasks/${editedTask.id}/`,
+          editedTask
+        );
+        onSave(updatedTask);
+        onClose();
+      } catch (error) {
+        console.error("Error saving task:", error);
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    if (editedTask) {
+      try {
+        await api.delete<void>(`/tasks/${editedTask.id}/`);
+        onDelete(editedTask.id);
+        onClose();
+      } catch (error) {
+        console.error("Error deleting task:", error);
+      }
+    }
+  };
+
+  if (!editedTask) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="lg">
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{task.title}</ModalHeader>
+        <ModalHeader>{editedTask.title}</ModalHeader>
         <ModalBody>
-          <Text mb={4}>
-            <strong>Description:</strong> {task.description}
-          </Text>
-          <Flex mb={4}>
-            <Box mr={4}>
-              <Text>
-                <strong>Stage:</strong>{" "}
-                <Badge
-                  colorScheme={task.stage === "completed" ? "green" : "blue"}
-                >
-                  {task.stage}
-                </Badge>
-              </Text>
-            </Box>
-            <Box>
-              <Text>
-                <strong>Category:</strong> {task.category}
-              </Text>
-            </Box>
-          </Flex>
-          <Flex mb={4}>
-            <Box mr={4}>
-              <Text>
-                <CalendarIcon mr={2} />
-                <strong>Created At:</strong>{" "}
-                {new Date(task.created_at).toLocaleDateString()}
-              </Text>
-            </Box>
-            <Box>
-              <Text>
-                <CalendarIcon mr={2} />
-                <strong>Due Date:</strong>{" "}
-                {new Date(task.completion_date).toLocaleDateString()}
-              </Text>
-            </Box>
-          </Flex>
+          <Grid templateColumns="150px 1fr" gap={4}>
+            <GridItem>Title:</GridItem>
+            <GridItem>
+              <Input
+                value={editedTask.title || ""}
+                onChange={(e) => handleInputChange("title", e.target.value)}
+              />
+            </GridItem>
+
+            <GridItem>Description:</GridItem>
+            <GridItem>
+              <Textarea
+                value={editedTask.description || ""}
+                onChange={(e) =>
+                  handleInputChange("description", e.target.value)
+                }
+              />
+            </GridItem>
+
+            <GridItem>Stage:</GridItem>
+            <GridItem>
+              <Select
+                value={editedTask.stage || ""}
+                onChange={(e) => handleInputChange("stage", e.target.value)}
+              >
+                <option value="in_progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </Select>
+            </GridItem>
+
+            <GridItem>Category:</GridItem>
+            <GridItem>
+              <Input
+                value={editedTask.category || ""}
+                onChange={(e) => handleInputChange("category", e.target.value)}
+              />
+            </GridItem>
+
+            <GridItem>Due Date:</GridItem>
+            <GridItem>
+              <Input
+                type="date"
+                value={
+                  editedTask.completion_date
+                    ? new Date(editedTask.completion_date)
+                        .toISOString()
+                        .substr(0, 10)
+                    : ""
+                }
+                onChange={(e) =>
+                  handleInputChange("completion_date", e.target.value)
+                }
+              />
+            </GridItem>
+          </Grid>
         </ModalBody>
+
         <ModalFooter>
           <IconButton
+            aria-label="Delete task"
             icon={<DeleteIcon />}
-            aria-label="Delete Task"
             colorScheme="red"
-            onClick={() => console.log("Delete task")}
+            onClick={handleDelete}
             mr="auto"
           />
-          <Button
-            colorScheme="gray"
-            onClick={onClose}
-            size="md"
-            minWidth="100px"
-          >
+          <Button variant="outline" onClick={onClose} colorScheme="gray" mr={3}>
             Cancel
           </Button>
-          <Button
-            colorScheme="blue"
-            onClick={() => console.log("Save task")}
-            size="md"
-            ml={3}
-            minWidth="100px"
-          >
+          <Button colorScheme="blue" onClick={handleSave}>
             Save
           </Button>
         </ModalFooter>

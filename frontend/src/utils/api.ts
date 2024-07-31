@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -13,7 +13,10 @@ const apiClient = axios.create({
 const api = {
   get: async <T>(endpoint: string, config?: AxiosRequestConfig): Promise<T> => {
     try {
-      const response = await apiClient.get<T>(endpoint, config);
+      const response: AxiosResponse<T> = await apiClient.get<T>(
+        endpoint,
+        config
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -26,7 +29,11 @@ const api = {
     config?: AxiosRequestConfig
   ): Promise<T> => {
     try {
-      const response = await apiClient.post<T>(endpoint, data, config);
+      const response: AxiosResponse<T> = await apiClient.post<T>(
+        endpoint,
+        data,
+        config
+      );
       return response.data;
     } catch (error) {
       console.error("Error posting data:", error);
@@ -39,7 +46,11 @@ const api = {
     config?: AxiosRequestConfig
   ): Promise<T> => {
     try {
-      const response = await apiClient.put<T>(endpoint, data, config);
+      const response: AxiosResponse<T> = await apiClient.put<T>(
+        endpoint,
+        data,
+        config
+      );
       return response.data;
     } catch (error) {
       console.error("Error updating data:", error);
@@ -51,7 +62,10 @@ const api = {
     config?: AxiosRequestConfig
   ): Promise<T> => {
     try {
-      const response = await apiClient.delete<T>(endpoint, config);
+      const response: AxiosResponse<T> = await apiClient.delete<T>(
+        endpoint,
+        config
+      );
       return response.data;
     } catch (error) {
       console.error("Error deleting data:", error);
