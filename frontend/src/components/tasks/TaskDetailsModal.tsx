@@ -15,8 +15,8 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
-import api from "../utils/api";
-import { Task } from "../redux/tasksSlice";
+import api from "../../utils/api";
+import { Task } from "../../redux/tasksSlice";
 
 interface TaskDetailsModalProps {
   isOpen: boolean;

@@ -12,13 +12,15 @@ import {
   Text,
   Flex,
   Badge,
+  Button,
 } from "@chakra-ui/react";
-import { CheckCircleIcon, InfoIcon } from "@chakra-ui/icons";
+import { CheckCircleIcon, InfoIcon, AddIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
 import { fetchTasks, Task } from "../redux/tasksSlice";
 import Pagination from "../components/Pagination";
-import TaskDetailsModal from "../components/TaskDetailsModal";
+import TaskDetailsModal from "../components/tasks/TaskDetailsModal";
+import CreateTaskModal from "../components/tasks/CreateTaskModal";
 
 const Tasks = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,7 +30,8 @@ const Tasks = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTaskDetailsModalOpen, setIsTaskDetailsModalOpen] = useState(false);
+  const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
 
   useEffect(() => {
     if (status === "idle") {
@@ -43,12 +46,21 @@ const Tasks = () => {
 
   const handleRowClick = (task: Task) => {
     setSelectedTask(task);
-    setIsModalOpen(true);
+    setIsTaskDetailsModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseTaskDetailsModal = () => {
+    setIsTaskDetailsModalOpen(false);
     setSelectedTask(null);
+  };
+
+  const handleCloseCreateTaskModal = () => {
+    setIsCreateTaskModalOpen(false);
+  };
+
+  const handleCreateTask = (newTask: Task) => {
+    console.log("Task created:", newTask);
+    dispatch(fetchTasks(currentPage));
   };
 
   const handleSave = (updatedTask: Task) => {
@@ -91,9 +103,18 @@ const Tasks = () => {
 
   return (
     <Box p={4}>
-      <Heading as="h2" size="lg" mb={2}>
-        Tasks
-      </Heading>
+      <Flex justifyContent="space-between" alignItems="center" mb={4}>
+        <Heading as="h2" size="lg">
+          Tasks
+        </Heading>
+        <Button
+          leftIcon={<AddIcon />}
+          colorScheme="teal"
+          onClick={() => setIsCreateTaskModalOpen(true)}
+        >
+          Create Task
+        </Button>
+      </Flex>
       <Text color="gray.500" mb={4}>
         {totalCount} tasks
       </Text>
@@ -147,11 +168,16 @@ const Tasks = () => {
       )}
       {status === "failed" && <Text>Error loading tasks.</Text>}
       <TaskDetailsModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        isOpen={isTaskDetailsModalOpen}
+        onClose={handleCloseTaskDetailsModal}
         task={selectedTask}
         onSave={handleSave}
         onDelete={handleDelete}
+      />
+      <CreateTaskModal
+        isOpen={isCreateTaskModalOpen}
+        onClose={handleCloseCreateTaskModal}
+        onCreate={handleCreateTask}
       />
     </Box>
   );
