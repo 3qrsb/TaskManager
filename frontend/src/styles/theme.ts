@@ -61,29 +61,6 @@ const theme = extendTheme({
       dark: "#ffffff",
     },
   },
-  styles: {
-    global: (props: any) => ({
-      body: {
-        bg: props.colorMode === "dark" ? "background.dark" : "background.light",
-        color: props.colorMode === "dark" ? "text.dark" : "text.light",
-      },
-      header: {
-        bg:
-          props.colorMode === "dark"
-            ? "headerFooterBg.dark"
-            : "headerFooterBg.light",
-      },
-      footer: {
-        bg:
-          props.colorMode === "dark"
-            ? "headerFooterBg.dark"
-            : "headerFooterBg.light",
-      },
-      sidebar: {
-        bg: props.colorMode === "dark" ? "sidebarBg.dark" : "sidebarBg.light",
-      },
-    }),
-  },
 });
 
 export default theme;
