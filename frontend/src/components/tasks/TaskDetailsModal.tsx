@@ -75,7 +75,13 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
   if (!editedTask) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal
+      size="lg"
+      motionPreset="slideInTop"
+      closeOnOverlayClick={false}
+      isOpen={isOpen}
+      onClose={onClose}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{editedTask.title}</ModalHeader>

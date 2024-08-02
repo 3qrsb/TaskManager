@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -15,6 +15,11 @@ import {
 } from "@chakra-ui/react";
 import api from "../../utils/api";
 import { Task } from "../../redux/tasksSlice";
+
+interface Category {
+  id: string;
+  title: string;
+}
 
 interface CreateTaskModalProps {
   isOpen: boolean;
@@ -34,9 +39,32 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
     category: "",
     completion_date: "",
   });
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setNewTask({
+        title: "",
+        description: "",
+        stage: "in_progress",
+        category: "",
+        completion_date: "",
+      });
+      fetchCategories();
+    }
+  }, [isOpen]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await api.get<Category[]>("/categories/");
+      setCategories(response);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
 
   const handleInputChange = (field: keyof Task, value: any) => {
-    setNewTask((prev: any) => ({ ...prev, [field]: value }));
+    setNewTask((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleCreate = async () => {
@@ -53,7 +81,13 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal
+      size="lg"
+      motionPreset="slideInTop"
+      closeOnOverlayClick={false}
+      isOpen={isOpen}
+      onClose={onClose}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Create New Task</ModalHeader>
@@ -80,8 +114,9 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
             <GridItem>Stage:</GridItem>
             <GridItem>
               <Select
-                value={newTask.stage || ""}
+                value={newTask.stage}
                 onChange={(e) => handleInputChange("stage", e.target.value)}
+                isDisabled={true}
               >
                 <option value="in_progress">In Progress</option>
                 <option value="completed">Completed</option>
@@ -90,10 +125,23 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
 
             <GridItem>Category:</GridItem>
             <GridItem>
-              <Input
+              <Select
                 value={newTask.category || ""}
                 onChange={(e) => handleInputChange("category", e.target.value)}
-              />
+              >
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {categories.map((category) => (
+                  <option
+                    key={category.id}
+                    value={category.id}
+                    style={{ textTransform: "capitalize" }}
+                  >
+                    {category.title}
+                  </option>
+                ))}
+              </Select>
             </GridItem>
 
             <GridItem>Due Date:</GridItem>
