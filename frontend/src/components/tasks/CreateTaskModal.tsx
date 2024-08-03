@@ -7,17 +7,13 @@ import {
   ModalFooter,
   ModalBody,
   Button,
-  Input,
-  Textarea,
-  Select,
-  Grid,
-  GridItem,
 } from "@chakra-ui/react";
 import { Task } from "../../redux/tasksSlice";
 import { useDispatch } from "react-redux";
 import { createTask } from "../../redux/tasksSlice";
 import { AppDispatch } from "../../redux/store";
 import api from "../../utils/api";
+import TaskFormFields from "./TaskFormFields";
 
 interface Category {
   id: string;
@@ -95,75 +91,12 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
       <ModalContent>
         <ModalHeader>Create New Task</ModalHeader>
         <ModalBody>
-          <Grid templateColumns="150px 1fr" gap={4}>
-            <GridItem>Title:</GridItem>
-            <GridItem>
-              <Input
-                value={newTask.title || ""}
-                onChange={(e) => handleInputChange("title", e.target.value)}
-              />
-            </GridItem>
-
-            <GridItem>Description:</GridItem>
-            <GridItem>
-              <Textarea
-                value={newTask.description || ""}
-                onChange={(e) =>
-                  handleInputChange("description", e.target.value)
-                }
-              />
-            </GridItem>
-
-            <GridItem>Stage:</GridItem>
-            <GridItem>
-              <Select
-                value={newTask.stage}
-                onChange={(e) => handleInputChange("stage", e.target.value)}
-                isDisabled={true}
-              >
-                <option value="in_progress">In Progress</option>
-                <option value="completed">Completed</option>
-              </Select>
-            </GridItem>
-
-            <GridItem>Category:</GridItem>
-            <GridItem>
-              <Select
-                value={newTask.category || ""}
-                onChange={(e) => handleInputChange("category", e.target.value)}
-              >
-                <option value="" disabled>
-                  Select a category
-                </option>
-                {categories.map((category) => (
-                  <option
-                    key={category.id}
-                    value={category.id}
-                    style={{ textTransform: "capitalize" }}
-                  >
-                    {category.title}
-                  </option>
-                ))}
-              </Select>
-            </GridItem>
-
-            <GridItem>Due Date:</GridItem>
-            <GridItem>
-              <Input
-                type="date"
-                value={
-                  newTask.completion_date
-                    ? new Date(newTask.completion_date)
-                        .toISOString()
-                        .substr(0, 10)
-                    : ""
-                }
-                onChange={(e) =>
-                  handleInputChange("completion_date", e.target.value)
-                }
-              />
-            </GridItem>
-          </Grid>
+          <TaskFormFields
+            taskData={newTask}
+            categories={categories}
+            handleInputChange={handleInputChange}
+            isEditMode={false}
+          />
         </ModalBody>
 
         <ModalFooter>
