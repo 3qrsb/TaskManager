@@ -15,8 +15,10 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
-import api from "../../utils/api";
 import { Task } from "../../redux/tasksSlice";
+import { useDispatch } from "react-redux";
+import { updateTask, deleteTask } from "../../redux/tasksSlice";
+import { AppDispatch } from "../../redux/store";
 
 interface TaskDetailsModalProps {
   isOpen: boolean;
@@ -33,6 +35,7 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
   onSave,
   onDelete,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [editedTask, setEditedTask] = useState<Task | null>(task);
 
   useEffect(() => {
@@ -47,28 +50,29 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
 
   const handleSave = async () => {
     if (editedTask) {
-      try {
-        const updatedTask = await api.put<Task, Task>(
-          `/tasks/${editedTask.id}/`,
-          editedTask
-        );
-        onSave(updatedTask);
-        onClose();
-      } catch (error) {
-        console.error("Error saving task:", error);
-      }
+      dispatch(updateTask(editedTask))
+        .unwrap()
+        .then((updatedTask) => {
+          onSave(updatedTask);
+          onClose();
+        })
+        .catch((error) => {
+          console.error("Error saving task:", error);
+        });
     }
   };
 
   const handleDelete = async () => {
     if (editedTask) {
-      try {
-        await api.delete<void>(`/tasks/${editedTask.id}/`);
-        onDelete(editedTask.id);
-        onClose();
-      } catch (error) {
-        console.error("Error deleting task:", error);
-      }
+      dispatch(deleteTask(editedTask.id))
+        .unwrap()
+        .then(() => {
+          onDelete(editedTask.id);
+          onClose();
+        })
+        .catch((error) => {
+          console.error("Error deleting task:", error);
+        });
     }
   };
 

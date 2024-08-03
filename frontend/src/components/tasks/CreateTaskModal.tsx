@@ -13,8 +13,11 @@ import {
   Grid,
   GridItem,
 } from "@chakra-ui/react";
-import api from "../../utils/api";
 import { Task } from "../../redux/tasksSlice";
+import { useDispatch } from "react-redux";
+import { createTask } from "../../redux/tasksSlice";
+import { AppDispatch } from "../../redux/store";
+import api from "../../utils/api";
 
 interface Category {
   id: string;
@@ -32,6 +35,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
   onClose,
   onCreate,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [newTask, setNewTask] = useState<Partial<Task>>({
     title: "",
     description: "",
@@ -68,16 +72,15 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
   };
 
   const handleCreate = async () => {
-    try {
-      const createdTask = await api.post<Task, Partial<Task>>(
-        "/tasks/",
-        newTask
-      );
-      onCreate(createdTask);
-      onClose();
-    } catch (error) {
-      console.error("Error creating task:", error);
-    }
+    dispatch(createTask(newTask as Task))
+      .unwrap()
+      .then((createdTask) => {
+        onCreate(createdTask);
+        onClose();
+      })
+      .catch((error) => {
+        console.error("Error creating task:", error);
+      });
   };
 
   return (
