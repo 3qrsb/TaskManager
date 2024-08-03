@@ -53,6 +53,25 @@ export const createTask = createAsyncThunk(
   }
 );
 
+export const updateTask = createAsyncThunk(
+  "tasks/updateTask",
+  async (updatedTask: Task) => {
+    const response = await api.put<Task, Task>(
+      `/tasks/${updatedTask.id}/`,
+      updatedTask
+    );
+    return response;
+  }
+);
+
+export const deleteTask = createAsyncThunk(
+  "tasks/deleteTask",
+  async (taskId: number) => {
+    await api.delete<void>(`/tasks/${taskId}/`);
+    return taskId;
+  }
+);
+
 const tasksSlice = createSlice({
   name: "tasks",
   initialState,
@@ -83,6 +102,17 @@ const tasksSlice = createSlice({
       })
       .addCase(createTask.fulfilled, (state, action: PayloadAction<Task>) => {
         state.tasks.push(action.payload);
+      })
+      .addCase(updateTask.fulfilled, (state, action: PayloadAction<Task>) => {
+        const index = state.tasks.findIndex(
+          (task) => task.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.tasks[index] = action.payload;
+        }
+      })
+      .addCase(deleteTask.fulfilled, (state, action: PayloadAction<number>) => {
+        state.tasks = state.tasks.filter((task) => task.id !== action.payload);
       });
   },
 });

@@ -7,16 +7,14 @@ import {
   ModalFooter,
   ModalBody,
   Button,
-  Input,
-  Textarea,
-  Select,
-  Grid,
-  GridItem,
   IconButton,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
-import api from "../../utils/api";
 import { Task } from "../../redux/tasksSlice";
+import { useDispatch } from "react-redux";
+import { updateTask, deleteTask } from "../../redux/tasksSlice";
+import { AppDispatch } from "../../redux/store";
+import TaskFormFields from "./TaskFormFields";
 
 interface TaskDetailsModalProps {
   isOpen: boolean;
@@ -33,6 +31,7 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
   onSave,
   onDelete,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [editedTask, setEditedTask] = useState<Task | null>(task);
 
   useEffect(() => {
@@ -47,28 +46,29 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
 
   const handleSave = async () => {
     if (editedTask) {
-      try {
-        const updatedTask = await api.put<Task, Task>(
-          `/tasks/${editedTask.id}/`,
-          editedTask
-        );
-        onSave(updatedTask);
-        onClose();
-      } catch (error) {
-        console.error("Error saving task:", error);
-      }
+      dispatch(updateTask(editedTask))
+        .unwrap()
+        .then((updatedTask) => {
+          onSave(updatedTask);
+          onClose();
+        })
+        .catch((error) => {
+          console.error("Error saving task:", error);
+        });
     }
   };
 
   const handleDelete = async () => {
     if (editedTask) {
-      try {
-        await api.delete<void>(`/tasks/${editedTask.id}/`);
-        onDelete(editedTask.id);
-        onClose();
-      } catch (error) {
-        console.error("Error deleting task:", error);
-      }
+      dispatch(deleteTask(editedTask.id))
+        .unwrap()
+        .then(() => {
+          onDelete(editedTask.id);
+          onClose();
+        })
+        .catch((error) => {
+          console.error("Error deleting task:", error);
+        });
     }
   };
 
@@ -86,61 +86,11 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
       <ModalContent>
         <ModalHeader>{editedTask.title}</ModalHeader>
         <ModalBody>
-          <Grid templateColumns="150px 1fr" gap={4}>
-            <GridItem>Title:</GridItem>
-            <GridItem>
-              <Input
-                value={editedTask.title || ""}
-                onChange={(e) => handleInputChange("title", e.target.value)}
-              />
-            </GridItem>
-
-            <GridItem>Description:</GridItem>
-            <GridItem>
-              <Textarea
-                value={editedTask.description || ""}
-                onChange={(e) =>
-                  handleInputChange("description", e.target.value)
-                }
-              />
-            </GridItem>
-
-            <GridItem>Stage:</GridItem>
-            <GridItem>
-              <Select
-                value={editedTask.stage || ""}
-                onChange={(e) => handleInputChange("stage", e.target.value)}
-              >
-                <option value="in_progress">In Progress</option>
-                <option value="completed">Completed</option>
-              </Select>
-            </GridItem>
-
-            <GridItem>Category:</GridItem>
-            <GridItem>
-              <Input
-                value={editedTask.category || ""}
-                onChange={(e) => handleInputChange("category", e.target.value)}
-              />
-            </GridItem>
-
-            <GridItem>Due Date:</GridItem>
-            <GridItem>
-              <Input
-                type="date"
-                value={
-                  editedTask.completion_date
-                    ? new Date(editedTask.completion_date)
-                        .toISOString()
-                        .substr(0, 10)
-                    : ""
-                }
-                onChange={(e) =>
-                  handleInputChange("completion_date", e.target.value)
-                }
-              />
-            </GridItem>
-          </Grid>
+          <TaskFormFields
+            taskData={editedTask}
+            categories={[]}
+            handleInputChange={handleInputChange}
+          />
         </ModalBody>
 
         <ModalFooter>
