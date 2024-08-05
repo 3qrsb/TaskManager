@@ -2,13 +2,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, DestroyModelMixin, ListModelMixin
-from rest_framework.pagination import PageNumberPagination
+from .pagination import CustomPageNumberPagination
 from .models import Task, Category, Note
 from .serializers import TaskSerializer, AddTaskSerializer, UpdateStageSerializer, CategorySerilizer, NoteSerializer
 
 
 class TaskViewSet(ModelViewSet):
-    pagination_class = PageNumberPagination
+    pagination_class = CustomPageNumberPagination
 
     def get_queryset(self):
         queryset = Task.objects.select_related('category').all()

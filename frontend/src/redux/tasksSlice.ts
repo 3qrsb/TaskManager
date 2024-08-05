@@ -34,11 +34,13 @@ const initialState: TasksState = {
 
 export const fetchTasks = createAsyncThunk(
   "tasks/fetchTasks",
-  async (page: number) => {
-    const response = await api.get<TasksResponse>(`/tasks/?page=${page}`);
+  async ({ page, pageSize }: { page: number; pageSize: number }) => {
+    const response = await api.get<TasksResponse>(
+      `/tasks/?page=${page}&page_size=${pageSize}`
+    );
     return {
       tasks: response.results,
-      totalPages: Math.ceil(response.count / 15),
+      totalPages: Math.ceil(response.count / pageSize),
       totalCount: response.count,
     };
   }

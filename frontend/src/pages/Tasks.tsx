@@ -33,16 +33,18 @@ const Tasks = () => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isTaskDetailsModalOpen, setIsTaskDetailsModalOpen] = useState(false);
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
+  const [pageSize] = useState(10);
 
   useEffect(() => {
     if (status === "idle") {
-      dispatch(fetchTasks(currentPage));
+      dispatch(fetchTasks({ page: currentPage, pageSize }));
     }
-  }, [status, dispatch, currentPage]);
+  }, [status, dispatch, currentPage, pageSize]);
 
   const handlePageChange = (page: number) => {
+    const pageSize = 10;
     setCurrentPage(page);
-    dispatch(fetchTasks(page));
+    dispatch(fetchTasks({ page, pageSize }));
   };
 
   const handleRowClick = (task: Task) => {
@@ -61,17 +63,17 @@ const Tasks = () => {
 
   const handleCreateTask = (newTask: Task) => {
     console.log("Task created:", newTask);
-    dispatch(fetchTasks(currentPage));
+    dispatch(fetchTasks({ page: currentPage, pageSize }));
   };
 
   const handleSave = (updatedTask: Task) => {
     console.log("Task saved:", updatedTask);
-    dispatch(fetchTasks(currentPage));
+    dispatch(fetchTasks({ page: currentPage, pageSize }));
   };
 
   const handleDelete = (taskId: number) => {
     console.log("Task deleted:", taskId);
-    dispatch(fetchTasks(currentPage));
+    dispatch(fetchTasks({ page: currentPage, pageSize }));
   };
 
   const getStageIcon = (stage: string) => {
