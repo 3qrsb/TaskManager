@@ -17,6 +17,7 @@
     "@types/react-dom": "^18.3.0",
     "axios": "^1.7.2",
     "framer-motion": "^11.3.8",
+    "ldrs": "^1.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.2.1",
