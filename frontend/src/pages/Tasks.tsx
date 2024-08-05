@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Heading,
-  Spinner,
   Table,
   Thead,
   Tbody,
@@ -21,6 +20,7 @@ import { fetchTasks, Task } from "../redux/tasksSlice";
 import Pagination from "../components/Pagination";
 import TaskDetailsModal from "../components/tasks/TaskDetailsModal";
 import CreateTaskModal from "../components/tasks/CreateTaskModal";
+import Loader from "../components/Loader";
 
 const Tasks = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -118,7 +118,7 @@ const Tasks = () => {
       <Text color="gray.500" mb={4}>
         {totalCount} tasks
       </Text>
-      {status === "loading" && <Spinner />}
+      {status === "loading" && <Loader />}
       {status === "succeeded" && tasks.length === 0 && (
         <Text>No tasks available.</Text>
       )}
