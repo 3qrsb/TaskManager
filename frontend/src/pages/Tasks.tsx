@@ -17,14 +17,15 @@ import { CheckCircleIcon, InfoIcon, AddIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
 import { fetchTasks, Task } from "../redux/tasksSlice";
-import Pagination from "../components/Pagination";
+import Pagination from "../components/UI/Pagination";
 import TaskDetailsModal from "../components/tasks/TaskDetailsModal";
 import CreateTaskModal from "../components/tasks/CreateTaskModal";
-import Loader from "../components/Loader";
+import Loader from "../components/UI/Loader";
+import ErrorMessage from "../components/UI/ErrorMessage";
 
 const Tasks = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { tasks, status, totalPages, totalCount } = useSelector(
+  const { tasks, status, totalPages, totalCount, error } = useSelector(
     (state: RootState) => state.tasksSlice
   );
 
@@ -119,6 +120,7 @@ const Tasks = () => {
         {totalCount} tasks
       </Text>
       {status === "loading" && <Loader />}
+      {status === "failed" && <ErrorMessage description={error} />}
       {status === "succeeded" && tasks.length === 0 && (
         <Text>No tasks available.</Text>
       )}
@@ -166,7 +168,6 @@ const Tasks = () => {
           />
         </>
       )}
-      {status === "failed" && <Text>Error loading tasks.</Text>}
       <TaskDetailsModal
         isOpen={isTaskDetailsModalOpen}
         onClose={handleCloseTaskDetailsModal}

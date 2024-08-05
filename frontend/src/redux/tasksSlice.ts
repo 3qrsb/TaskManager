@@ -21,6 +21,7 @@ interface TasksState {
   status: "idle" | "loading" | "succeeded" | "failed";
   totalPages: number;
   totalCount: number;
+  error: string | null;
 }
 
 const initialState: TasksState = {
@@ -28,6 +29,7 @@ const initialState: TasksState = {
   status: "idle",
   totalPages: 1,
   totalCount: 0,
+  error: null,
 };
 
 export const fetchTasks = createAsyncThunk(
@@ -80,6 +82,7 @@ const tasksSlice = createSlice({
     builder
       .addCase(fetchTasks.pending, (state) => {
         state.status = "loading";
+        state.error = null;
       })
       .addCase(
         fetchTasks.fulfilled,
@@ -97,8 +100,9 @@ const tasksSlice = createSlice({
           state.totalCount = action.payload.totalCount;
         }
       )
-      .addCase(fetchTasks.rejected, (state) => {
+      .addCase(fetchTasks.rejected, (state, action) => {
         state.status = "failed";
+        state.error = action.error.message || "Failed to fetch tasks";
       })
       .addCase(createTask.fulfilled, (state, action: PayloadAction<Task>) => {
         state.tasks.push(action.payload);
