@@ -17,14 +17,15 @@ import { CheckCircleIcon, InfoIcon, AddIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
 import { fetchTasks, Task } from "../redux/tasksSlice";
-import Pagination from "../components/Pagination";
+import Pagination from "../components/UI/Pagination";
 import TaskDetailsModal from "../components/tasks/TaskDetailsModal";
 import CreateTaskModal from "../components/tasks/CreateTaskModal";
-import Loader from "../components/Loader";
+import Loader from "../components/UI/Loader";
+import ErrorMessage from "../components/UI/ErrorMessage";
 
 const Tasks = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { tasks, status, totalPages, totalCount } = useSelector(
+  const { tasks, status, totalPages, totalCount, error } = useSelector(
     (state: RootState) => state.tasksSlice
   );
 
@@ -32,16 +33,18 @@ const Tasks = () => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isTaskDetailsModalOpen, setIsTaskDetailsModalOpen] = useState(false);
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
+  const [pageSize] = useState(10);
 
   useEffect(() => {
     if (status === "idle") {
-      dispatch(fetchTasks(currentPage));
+      dispatch(fetchTasks({ page: currentPage, pageSize }));
     }
-  }, [status, dispatch, currentPage]);
+  }, [status, dispatch, currentPage, pageSize]);
 
   const handlePageChange = (page: number) => {
+    const pageSize = 10;
     setCurrentPage(page);
-    dispatch(fetchTasks(page));
+    dispatch(fetchTasks({ page, pageSize }));
   };
 
   const handleRowClick = (task: Task) => {
@@ -60,17 +63,17 @@ const Tasks = () => {
 
   const handleCreateTask = (newTask: Task) => {
     console.log("Task created:", newTask);
-    dispatch(fetchTasks(currentPage));
+    dispatch(fetchTasks({ page: currentPage, pageSize }));
   };
 
   const handleSave = (updatedTask: Task) => {
     console.log("Task saved:", updatedTask);
-    dispatch(fetchTasks(currentPage));
+    dispatch(fetchTasks({ page: currentPage, pageSize }));
   };
 
   const handleDelete = (taskId: number) => {
     console.log("Task deleted:", taskId);
-    dispatch(fetchTasks(currentPage));
+    dispatch(fetchTasks({ page: currentPage, pageSize }));
   };
 
   const getStageIcon = (stage: string) => {
@@ -119,6 +122,7 @@ const Tasks = () => {
         {totalCount} tasks
       </Text>
       {status === "loading" && <Loader />}
+      {status === "failed" && <ErrorMessage description={error} />}
       {status === "succeeded" && tasks.length === 0 && (
         <Text>No tasks available.</Text>
       )}
@@ -166,7 +170,6 @@ const Tasks = () => {
           />
         </>
       )}
-      {status === "failed" && <Text>Error loading tasks.</Text>}
       <TaskDetailsModal
         isOpen={isTaskDetailsModalOpen}
         onClose={handleCloseTaskDetailsModal}
