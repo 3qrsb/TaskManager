@@ -42,7 +42,6 @@ const Tasks = () => {
   }, [status, dispatch, currentPage, pageSize]);
 
   const handlePageChange = (page: number) => {
-    const pageSize = 10;
     setCurrentPage(page);
     dispatch(fetchTasks({ page, pageSize }));
   };
