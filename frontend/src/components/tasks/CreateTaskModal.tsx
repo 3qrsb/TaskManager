@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -9,16 +9,11 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { Task } from "../../redux/tasksSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
 import { createTask } from "../../redux/tasksSlice";
-import { AppDispatch } from "../../redux/store";
-import api from "../../utils/api";
+import { fetchCategories } from "../../redux/categoriesSlice";
 import TaskFormFields from "./TaskFormFields";
-
-interface Category {
-  id: string;
-  title: string;
-}
 
 interface CreateTaskModalProps {
   isOpen: boolean;
@@ -32,6 +27,9 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
   onCreate,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const categories = useSelector(
+    (state: RootState) => state.categoriesSlice.categories
+  );
   const [newTask, setNewTask] = useState<Partial<Task>>({
     title: "",
     description: "",
@@ -39,7 +37,6 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
     category: "",
     completion_date: "",
   });
-  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     if (isOpen) {
@@ -50,21 +47,12 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
         category: "",
         completion_date: "",
       });
-      fetchCategories();
+      dispatch(fetchCategories());
     }
-  }, [isOpen]);
-
-  const fetchCategories = async () => {
-    try {
-      const response = await api.get<Category[]>("/categories/");
-      setCategories(response);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
+  }, [isOpen, dispatch]);
 
   const handleInputChange = (field: keyof Task, value: any) => {
-    setNewTask((prev) => ({ ...prev, [field]: value }));
+    setNewTask((prev: any) => ({ ...prev, [field]: value }));
   };
 
   const handleCreate = async () => {

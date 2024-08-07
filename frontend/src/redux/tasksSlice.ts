@@ -48,11 +48,8 @@ export const fetchTasks = createAsyncThunk(
 
 export const createTask = createAsyncThunk(
   "tasks/createTask",
-  async ({ title, description }: { title: string; description: string }) => {
-    const response = await api.post<
-      Task,
-      { title: string; description: string }
-    >("/tasks/", { title, description });
+  async (newTask: Partial<Task>) => {
+    const response = await api.post<Task, Partial<Task>>("/tasks/", newTask);
     return response;
   }
 );
