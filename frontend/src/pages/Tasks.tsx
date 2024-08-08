@@ -10,23 +10,32 @@ import {
   Td,
   Text,
   Flex,
-  Badge,
   Button,
 } from "@chakra-ui/react";
-import { CheckCircleIcon, InfoIcon, AddIcon } from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
 import { fetchTasks, Task } from "../redux/tasksSlice";
+import { fetchCategories } from "../redux/categoriesSlice";
 import Pagination from "../components/UI/Pagination";
 import TaskDetailsModal from "../components/tasks/TaskDetailsModal";
 import CreateTaskModal from "../components/tasks/CreateTaskModal";
 import Loader from "../components/UI/Loader";
 import ErrorMessage from "../components/UI/ErrorMessage";
+import {
+  getStageIcon,
+  getStageBadge,
+  truncateText,
+  getCategoryTitle,
+} from "../utils/taskUtils";
 
 const Tasks = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { tasks, status, totalPages, totalCount, error } = useSelector(
     (state: RootState) => state.tasksSlice
+  );
+  const { categories } = useSelector(
+    (state: RootState) => state.categoriesSlice
   );
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,7 +48,10 @@ const Tasks = () => {
     if (status === "idle") {
       dispatch(fetchTasks({ page: currentPage, pageSize }));
     }
-  }, [status, dispatch, currentPage, pageSize]);
+    if (categories.length === 0) {
+      dispatch(fetchCategories());
+    }
+  }, [status, categories.length, dispatch, currentPage, pageSize]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -73,34 +85,6 @@ const Tasks = () => {
   const handleDelete = (taskId: number) => {
     console.log("Task deleted:", taskId);
     dispatch(fetchTasks({ page: currentPage, pageSize }));
-  };
-
-  const getStageIcon = (stage: string) => {
-    switch (stage) {
-      case "completed":
-        return <CheckCircleIcon color="green.500" />;
-      case "in_progress":
-        return <InfoIcon color="blue.500" />;
-      default:
-        return null;
-    }
-  };
-
-  const getStageBadge = (stage: string) => {
-    switch (stage) {
-      case "completed":
-        return <Badge colorScheme="green">Completed</Badge>;
-      case "in_progress":
-        return <Badge colorScheme="blue">In Progress</Badge>;
-      default:
-        return null;
-    }
-  };
-
-  const truncateText = (text: string, maxLength: number) => {
-    return text.length > maxLength
-      ? `${text.substring(0, maxLength)}...`
-      : text;
   };
 
   return (
@@ -155,7 +139,7 @@ const Tasks = () => {
                       <Text ml={2}>{getStageBadge(task.stage)}</Text>
                     </Flex>
                   </Td>
-                  <Td>{task.category}</Td>
+                  <Td>{getCategoryTitle(categories, task.category)}</Td>
                   <Td>{new Date(task.created_at).toLocaleDateString()}</Td>
                   <Td>{new Date(task.completion_date).toLocaleDateString()}</Td>
                 </Tr>

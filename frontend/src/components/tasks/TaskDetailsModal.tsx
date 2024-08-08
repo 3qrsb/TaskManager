@@ -11,9 +11,10 @@ import {
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { Task } from "../../redux/tasksSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateTask, deleteTask } from "../../redux/tasksSlice";
-import { AppDispatch } from "../../redux/store";
+import { AppDispatch, RootState } from "../../redux/store";
+import { fetchCategories } from "../../redux/categoriesSlice";
 import TaskFormFields from "./TaskFormFields";
 
 interface TaskDetailsModalProps {
@@ -33,12 +34,21 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [editedTask, setEditedTask] = useState<Task | null>(task);
+  const { categories, status: categoriesStatus } = useSelector(
+    (state: RootState) => state.categoriesSlice
+  );
 
   useEffect(() => {
     if (task) {
       setEditedTask(task);
     }
   }, [task]);
+
+  useEffect(() => {
+    if (isOpen && categoriesStatus === "idle") {
+      dispatch(fetchCategories());
+    }
+  }, [isOpen, categoriesStatus, dispatch]);
 
   const handleInputChange = (field: keyof Task, value: any) => {
     setEditedTask((prev) => (prev ? { ...prev, [field]: value } : null));
@@ -88,7 +98,7 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
         <ModalBody>
           <TaskFormFields
             taskData={editedTask}
-            categories={[]}
+            categories={categories}
             handleInputChange={handleInputChange}
           />
         </ModalBody>

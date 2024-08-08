@@ -3,7 +3,7 @@ from .models import Task, Category, Note
 from datetime import date
 
 class TaskSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField()
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
 
     class Meta:
         model = Task
