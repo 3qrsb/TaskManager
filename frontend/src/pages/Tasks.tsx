@@ -17,6 +17,7 @@ import { CheckCircleIcon, InfoIcon, AddIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
 import { fetchTasks, Task } from "../redux/tasksSlice";
+import { fetchCategories } from "../redux/categoriesSlice";
 import Pagination from "../components/UI/Pagination";
 import TaskDetailsModal from "../components/tasks/TaskDetailsModal";
 import CreateTaskModal from "../components/tasks/CreateTaskModal";
@@ -27,6 +28,9 @@ const Tasks = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { tasks, status, totalPages, totalCount, error } = useSelector(
     (state: RootState) => state.tasksSlice
+  );
+  const { categories } = useSelector(
+    (state: RootState) => state.categoriesSlice
   );
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,7 +43,10 @@ const Tasks = () => {
     if (status === "idle") {
       dispatch(fetchTasks({ page: currentPage, pageSize }));
     }
-  }, [status, dispatch, currentPage, pageSize]);
+    if (categories.length === 0) {
+      dispatch(fetchCategories());
+    }
+  }, [status, categories.length, dispatch, currentPage, pageSize]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -103,6 +110,11 @@ const Tasks = () => {
       : text;
   };
 
+  const getCategoryTitle = (categoryId: string | null) => {
+    const category = categories.find((category) => category.id === categoryId);
+    return category ? category.title : "-";
+  };
+
   return (
     <Box p={4}>
       <Flex justifyContent="space-between" alignItems="center" mb={4}>
@@ -155,7 +167,7 @@ const Tasks = () => {
                       <Text ml={2}>{getStageBadge(task.stage)}</Text>
                     </Flex>
                   </Td>
-                  <Td>{task.category}</Td>
+                  <Td>{getCategoryTitle(task.category)}</Td>
                   <Td>{new Date(task.created_at).toLocaleDateString()}</Td>
                   <Td>{new Date(task.completion_date).toLocaleDateString()}</Td>
                 </Tr>
