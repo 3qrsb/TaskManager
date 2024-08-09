@@ -16,6 +16,7 @@ import { updateTask, deleteTask } from "../../redux/tasksSlice";
 import { AppDispatch, RootState } from "../../redux/store";
 import { fetchCategories } from "../../redux/categoriesSlice";
 import TaskFormFields from "./TaskFormFields";
+import useTaskToast from "../../hooks/useTaskToast";
 
 interface TaskDetailsModalProps {
   isOpen: boolean;
@@ -37,6 +38,8 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
   const { categories, status: categoriesStatus } = useSelector(
     (state: RootState) => state.categoriesSlice
   );
+
+  const { showToast } = useTaskToast();
 
   useEffect(() => {
     if (task) {
@@ -61,9 +64,19 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
         .then((updatedTask) => {
           onSave(updatedTask);
           onClose();
+          showToast({
+            title: "Task Updated",
+            description: "The task was successfully updated.",
+            status: "success",
+          });
         })
         .catch((error) => {
           console.error("Error saving task:", error);
+          showToast({
+            title: "Error",
+            description: "Failed to update task. Please try again.",
+            status: "error",
+          });
         });
     }
   };
@@ -75,9 +88,19 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
         .then(() => {
           onDelete(editedTask.id);
           onClose();
+          showToast({
+            title: "Task Deleted",
+            description: "The task was successfully deleted.",
+            status: "success",
+          });
         })
         .catch((error) => {
           console.error("Error deleting task:", error);
+          showToast({
+            title: "Error",
+            description: "Failed to delete task. Please try again.",
+            status: "error",
+          });
         });
     }
   };
