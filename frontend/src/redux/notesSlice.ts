@@ -23,6 +23,14 @@ export const fetchNotes = createAsyncThunk("notes/fetchNotes", async () => {
   return await api.get<Note[]>("/notes/");
 });
 
+export const addNote = createAsyncThunk<Note, Omit<Note, "id">>(
+  "notes/addNote",
+  async (newNote: Omit<Note, "id">) => {
+    const response = await api.post<Note, Omit<Note, "id">>("/notes/", newNote);
+    return response;
+  }
+);
+
 const notesSlice = createSlice({
   name: "notes",
   initialState,
@@ -39,6 +47,9 @@ const notesSlice = createSlice({
       .addCase(fetchNotes.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "Failed to fetch notes";
+      })
+      .addCase(addNote.fulfilled, (state, action) => {
+        state.notes.push(action.payload);
       });
   },
 });
