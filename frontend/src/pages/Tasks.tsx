@@ -12,6 +12,7 @@ import {
   Flex,
   Button,
   Select,
+  Stack,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -170,32 +171,38 @@ const Tasks = () => {
           Create Task
         </Button>
       </Flex>
-      <Flex mb={4} alignItems="center">
-        <Select
-          placeholder="Filter by Category"
-          onChange={handleCategoryChange}
-          mr={4}
-          value={selectedCategory || ""}
-        >
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.title}
-            </option>
-          ))}
-        </Select>
-        <Select
-          placeholder="Sort by"
-          onChange={handleSortChange}
-          value={sortBy}
-        >
-          <option value="created_at">Created At</option>
-          <option value="completion_date">Due Date</option>
-          <option value="title">Title</option>
-        </Select>
+      <Flex justifyContent="space-between" alignItems="center" mb={4}>
+        <Text color="gray.500" mb={4}>
+          {totalCount} tasks
+        </Text>
+        <Stack direction="row" spacing={4} align="center">
+          <Select
+            placeholder="Category"
+            onChange={handleCategoryChange}
+            value={selectedCategory || ""}
+            size="sm"
+            maxWidth="200px"
+          >
+            <option value="">All Categories</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.title}
+              </option>
+            ))}
+          </Select>
+          <Select
+            placeholder="Sort by"
+            onChange={handleSortChange}
+            value={sortBy}
+            size="sm"
+            maxWidth="150px"
+          >
+            <option value="created_at">Created At</option>
+            <option value="completion_date">Due Date</option>
+            <option value="title">Title</option>
+          </Select>
+        </Stack>
       </Flex>
-      <Text color="gray.500" mb={4}>
-        {totalCount} tasks
-      </Text>
       {status === "loading" && <Loader />}
       {status === "failed" && <ErrorMessage description={error} />}
       {status === "succeeded" && tasks.length === 0 && (
@@ -216,7 +223,11 @@ const Tasks = () => {
             </Thead>
             <Tbody>
               {tasks.map((task: Task) => (
-                <Tr key={task.id} onClick={() => handleRowClick(task)}>
+                <Tr
+                  key={task.id}
+                  onClick={() => handleRowClick(task)}
+                  _hover={{ bg: "gray.100", cursor: "pointer" }}
+                >
                   <Td>
                     <Text isTruncated>{truncateText(task.title, 30)}</Text>
                   </Td>
