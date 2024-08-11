@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, DestroyModelMixin, ListModelMixin
+from rest_framework.filters import OrderingFilter
 from .pagination import CustomPageNumberPagination
 from .models import Task, Category, Note
 from .serializers import TaskSerializer, AddTaskSerializer, UpdateStageSerializer, CategorySerilizer, NoteSerializer
@@ -9,6 +10,8 @@ from .serializers import TaskSerializer, AddTaskSerializer, UpdateStageSerialize
 
 class TaskViewSet(ModelViewSet):
     pagination_class = CustomPageNumberPagination
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['stage', 'created_at']
 
     def get_queryset(self):
         queryset = Task.objects.select_related('category').all()
