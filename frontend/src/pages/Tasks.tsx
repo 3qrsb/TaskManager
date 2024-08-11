@@ -11,6 +11,7 @@ import {
   Text,
   Flex,
   Button,
+  Select,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,19 +44,43 @@ const Tasks = () => {
   const [isTaskDetailsModalOpen, setIsTaskDetailsModalOpen] = useState(false);
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
   const [pageSize] = useState(10);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [sortBy, setSortBy] = useState<string>("created_at");
 
   useEffect(() => {
     if (status === "idle") {
-      dispatch(fetchTasks({ page: currentPage, pageSize }));
+      dispatch(
+        fetchTasks({
+          page: currentPage,
+          pageSize,
+          categoryId: selectedCategory,
+          ordering: sortBy,
+        })
+      );
     }
     if (categories.length === 0) {
       dispatch(fetchCategories());
     }
-  }, [status, categories.length, dispatch, currentPage, pageSize]);
+  }, [
+    status,
+    categories.length,
+    dispatch,
+    currentPage,
+    pageSize,
+    selectedCategory,
+    sortBy,
+  ]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    dispatch(fetchTasks({ page, pageSize }));
+    dispatch(
+      fetchTasks({
+        page,
+        pageSize,
+        categoryId: selectedCategory,
+        ordering: sortBy,
+      })
+    );
   };
 
   const handleRowClick = (task: Task) => {
@@ -74,17 +99,61 @@ const Tasks = () => {
 
   const handleCreateTask = (newTask: Task) => {
     console.log("Task created:", newTask);
-    dispatch(fetchTasks({ page: currentPage, pageSize }));
+    dispatch(
+      fetchTasks({
+        page: currentPage,
+        pageSize,
+        categoryId: selectedCategory,
+        ordering: sortBy,
+      })
+    );
   };
 
   const handleSave = (updatedTask: Task) => {
     console.log("Task saved:", updatedTask);
-    dispatch(fetchTasks({ page: currentPage, pageSize }));
+    dispatch(
+      fetchTasks({
+        page: currentPage,
+        pageSize,
+        categoryId: selectedCategory,
+        ordering: sortBy,
+      })
+    );
   };
 
   const handleDelete = (taskId: number) => {
     console.log("Task deleted:", taskId);
-    dispatch(fetchTasks({ page: currentPage, pageSize }));
+    dispatch(
+      fetchTasks({
+        page: currentPage,
+        pageSize,
+        categoryId: selectedCategory,
+        ordering: sortBy,
+      })
+    );
+  };
+
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const categoryId = event.target.value ? Number(event.target.value) : null;
+    setSelectedCategory(categoryId);
+    setCurrentPage(1);
+    dispatch(fetchTasks({ page: 1, pageSize, categoryId, ordering: sortBy }));
+  };
+
+  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const sortOrder = event.target.value;
+    setSortBy(sortOrder);
+    setCurrentPage(1);
+    dispatch(
+      fetchTasks({
+        page: 1,
+        pageSize,
+        categoryId: selectedCategory,
+        ordering: sortOrder,
+      })
+    );
   };
 
   return (
@@ -100,6 +169,29 @@ const Tasks = () => {
         >
           Create Task
         </Button>
+      </Flex>
+      <Flex mb={4} alignItems="center">
+        <Select
+          placeholder="Filter by Category"
+          onChange={handleCategoryChange}
+          mr={4}
+          value={selectedCategory || ""}
+        >
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.title}
+            </option>
+          ))}
+        </Select>
+        <Select
+          placeholder="Sort by"
+          onChange={handleSortChange}
+          value={sortBy}
+        >
+          <option value="created_at">Created At</option>
+          <option value="completion_date">Due Date</option>
+          <option value="title">Title</option>
+        </Select>
       </Flex>
       <Text color="gray.500" mb={4}>
         {totalCount} tasks
