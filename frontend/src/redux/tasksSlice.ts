@@ -34,10 +34,25 @@ const initialState: TasksState = {
 
 export const fetchTasks = createAsyncThunk(
   "tasks/fetchTasks",
-  async ({ page, pageSize }: { page: number; pageSize: number }) => {
-    const response = await api.get<TasksResponse>(
-      `/tasks/?page=${page}&page_size=${pageSize}`
-    );
+  async ({
+    page,
+    pageSize,
+    categoryId,
+    ordering,
+  }: {
+    page: number;
+    pageSize: number;
+    categoryId?: number | null;
+    ordering?: string;
+  }) => {
+    let url = `/tasks/?page=${page}&page_size=${pageSize}`;
+    if (categoryId) {
+      url += `&category_id=${categoryId}`;
+    }
+    if (ordering) {
+      url += `&ordering=${ordering}`;
+    }
+    const response = await api.get<TasksResponse>(url);
     return {
       tasks: response.results,
       totalPages: Math.ceil(response.count / pageSize),
