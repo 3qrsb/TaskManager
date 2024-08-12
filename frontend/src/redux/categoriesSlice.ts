@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import api from "../utils/api";
 
 export interface Category {
-  id: string;
+  id: number;
   title: string;
 }
 

@@ -6,7 +6,7 @@ export interface Task {
   title: string;
   description: string;
   stage: string;
-  category: string | null;
+  category: number | null;
   created_at: string;
   completion_date: string;
 }

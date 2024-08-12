@@ -4,7 +4,7 @@ import { Task } from "../../redux/tasksSlice";
 
 interface TaskFormFieldsProps {
   taskData: Partial<Task>;
-  categories: { id: string; title: string }[];
+  categories: { id: number; title: string }[];
   handleInputChange: (field: keyof Task, value: any) => void;
   isEditMode?: boolean;
 }
