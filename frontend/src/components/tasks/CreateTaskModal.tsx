@@ -35,7 +35,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
     title: "",
     description: "",
     stage: "in_progress",
-    category: "",
+    category: null,
     completion_date: "",
   });
 
@@ -47,7 +47,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
         title: "",
         description: "",
         stage: "in_progress",
-        category: "",
+        category: null,
         completion_date: "",
       });
       dispatch(fetchCategories());
@@ -55,7 +55,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
   }, [isOpen, dispatch]);
 
   const handleInputChange = (field: keyof Task, value: any) => {
-    setNewTask((prev: any) => ({ ...prev, [field]: value }));
+    setNewTask((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleCreate = async () => {

@@ -11,10 +11,13 @@ import {
   Text,
   Flex,
   Button,
-  Select,
   Stack,
+  MenuItem,
+  MenuButton,
+  Menu,
+  MenuList,
 } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
 import { fetchTasks, Task } from "../redux/tasksSlice";
@@ -134,17 +137,13 @@ const Tasks = () => {
     );
   };
 
-  const handleCategoryChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const categoryId = event.target.value ? Number(event.target.value) : null;
+  const handleCategoryChange = (categoryId: number | null) => {
     setSelectedCategory(categoryId);
     setCurrentPage(1);
     dispatch(fetchTasks({ page: 1, pageSize, categoryId, ordering: sortBy }));
   };
 
-  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const sortOrder = event.target.value;
+  const handleSortChange = (sortOrder: string) => {
     setSortBy(sortOrder);
     setCurrentPage(1);
     dispatch(
@@ -176,31 +175,58 @@ const Tasks = () => {
           {totalCount} tasks
         </Text>
         <Stack direction="row" spacing={4} align="center">
-          <Select
-            placeholder="Category"
-            onChange={handleCategoryChange}
-            value={selectedCategory || ""}
-            size="sm"
-            maxWidth="200px"
-          >
-            <option value="">All Categories</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.title}
-              </option>
-            ))}
-          </Select>
-          <Select
-            placeholder="Sort by"
-            onChange={handleSortChange}
-            value={sortBy}
-            size="sm"
-            maxWidth="150px"
-          >
-            <option value="created_at">Created At</option>
-            <option value="completion_date">Due Date</option>
-            <option value="title">Title</option>
-          </Select>
+          <Menu>
+            <MenuButton
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+              variant="outline"
+              borderRadius="md"
+              boxShadow="sm"
+              _hover={{ boxShadow: "md" }}
+              _focus={{ boxShadow: "md", borderColor: "teal.500" }}
+              size="sm"
+              maxWidth="200px"
+            >
+              Category: {getCategoryTitle(categories, selectedCategory)}
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={() => handleCategoryChange(null)}>
+                All Categories
+              </MenuItem>
+              {categories.map((category) => (
+                <MenuItem
+                  key={category.id}
+                  onClick={() => handleCategoryChange(category.id)}
+                >
+                  {category.title}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
+          <Menu>
+            <MenuButton
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+              variant="outline"
+              borderRadius="md"
+              boxShadow="sm"
+              _hover={{ boxShadow: "md" }}
+              _focus={{ boxShadow: "md", borderColor: "teal.500" }}
+            >
+              Sort by: {sortBy === "created_at" ? "Created At" : "Due Date"}
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={() => handleSortChange("created_at")}>
+                Created At
+              </MenuItem>
+              <MenuItem onClick={() => handleSortChange("completion_date")}>
+                Due Date
+              </MenuItem>
+              <MenuItem onClick={() => handleSortChange("title")}>
+                Title
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </Stack>
       </Flex>
       {status === "loading" && <Loader />}

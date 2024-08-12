@@ -30,7 +30,7 @@ export const truncateText = (text: string, maxLength: number) => {
 
 export const getCategoryTitle = (
   categories: Category[],
-  categoryId: string | null
+  categoryId: number | null
 ) => {
   const category = categories.find((category) => category.id === categoryId);
   return category ? category.title : "-";
