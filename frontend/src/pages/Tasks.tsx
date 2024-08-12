@@ -12,12 +12,8 @@ import {
   Flex,
   Button,
   Stack,
-  MenuItem,
-  MenuButton,
-  Menu,
-  MenuList,
 } from "@chakra-ui/react";
-import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
 import { fetchTasks, Task } from "../redux/tasksSlice";
@@ -33,6 +29,7 @@ import {
   truncateText,
   getCategoryTitle,
 } from "../utils/taskUtils";
+import CustomDropdown from "../components/UI/CustomDropdown";
 
 const Tasks = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -138,20 +135,29 @@ const Tasks = () => {
   };
 
   const handleCategoryChange = (categoryId: number | null) => {
-    setSelectedCategory(categoryId);
+    const finalCategoryId = categoryId !== -1 ? categoryId : null;
+    setSelectedCategory(finalCategoryId);
     setCurrentPage(1);
-    dispatch(fetchTasks({ page: 1, pageSize, categoryId, ordering: sortBy }));
+    dispatch(
+      fetchTasks({
+        page: 1,
+        pageSize,
+        categoryId: finalCategoryId,
+        ordering: sortBy,
+      })
+    );
   };
 
-  const handleSortChange = (sortOrder: string) => {
-    setSortBy(sortOrder);
+  const handleSortChange = (sortOrder: string | null) => {
+    const finalSortOrder = sortOrder || "created_at";
+    setSortBy(finalSortOrder);
     setCurrentPage(1);
     dispatch(
       fetchTasks({
         page: 1,
         pageSize,
         categoryId: selectedCategory,
-        ordering: sortOrder,
+        ordering: finalSortOrder,
       })
     );
   };
@@ -175,58 +181,23 @@ const Tasks = () => {
           {totalCount} tasks
         </Text>
         <Stack direction="row" spacing={4} align="center">
-          <Menu>
-            <MenuButton
-              as={Button}
-              rightIcon={<ChevronDownIcon />}
-              variant="outline"
-              borderRadius="md"
-              boxShadow="sm"
-              _hover={{ boxShadow: "md" }}
-              _focus={{ boxShadow: "md", borderColor: "teal.500" }}
-              size="sm"
-              maxWidth="200px"
-            >
-              Category: {getCategoryTitle(categories, selectedCategory)}
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={() => handleCategoryChange(null)}>
-                All Categories
-              </MenuItem>
-              {categories.map((category) => (
-                <MenuItem
-                  key={category.id}
-                  onClick={() => handleCategoryChange(category.id)}
-                >
-                  {category.title}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
-          <Menu>
-            <MenuButton
-              as={Button}
-              rightIcon={<ChevronDownIcon />}
-              variant="outline"
-              borderRadius="md"
-              boxShadow="sm"
-              _hover={{ boxShadow: "md" }}
-              _focus={{ boxShadow: "md", borderColor: "teal.500" }}
-            >
-              Sort by: {sortBy === "created_at" ? "Created At" : "Due Date"}
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={() => handleSortChange("created_at")}>
-                Created At
-              </MenuItem>
-              <MenuItem onClick={() => handleSortChange("completion_date")}>
-                Due Date
-              </MenuItem>
-              <MenuItem onClick={() => handleSortChange("title")}>
-                Title
-              </MenuItem>
-            </MenuList>
-          </Menu>
+          <CustomDropdown<number>
+            label="Category"
+            items={[{ id: -1, title: "All" }, ...categories]}
+            selectedItem={selectedCategory}
+            onChange={(id) => handleCategoryChange(id !== -1 ? id : null)}
+          />
+
+          <CustomDropdown<string>
+            label="Sort by"
+            items={[
+              { id: "created_at", title: "Created At" },
+              { id: "completion_date", title: "Due Date" },
+              { id: "title", title: "Title" },
+            ]}
+            selectedItem={sortBy}
+            onChange={handleSortChange}
+          />
         </Stack>
       </Flex>
       {status === "loading" && <Loader />}
