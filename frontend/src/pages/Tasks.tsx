@@ -12,6 +12,7 @@ import {
   Flex,
   Button,
   Stack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,6 +48,7 @@ const Tasks = () => {
   const [pageSize] = useState(10);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState<string>("created_at");
+  const hoverBg = useColorModeValue("gray.100", "gray.700");
 
   useEffect(() => {
     if (status === "idle") {
@@ -223,7 +225,7 @@ const Tasks = () => {
                 <Tr
                   key={task.id}
                   onClick={() => handleRowClick(task)}
-                  _hover={{ bg: "gray.100", cursor: "pointer" }}
+                  _hover={{ bg: hoverBg, cursor: "pointer" }}
                 >
                   <Td>
                     <Text isTruncated>{truncateText(task.title, 30)}</Text>

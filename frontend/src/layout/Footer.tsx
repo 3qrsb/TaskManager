@@ -1,15 +1,24 @@
-import { Box, Flex, Image, IconButton, Link, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Image,
+  IconButton,
+  Link,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { FaGithub, FaInstagram, FaTelegramPlane } from "react-icons/fa";
 
 const Footer = () => {
+  const footerBg = useColorModeValue(
+    "headerFooterBg.light",
+    "headerFooterBg.dark"
+  );
+  const textColor = useColorModeValue("text.light", "text.dark");
+  const iconHoverBg = useColorModeValue("secondary.100", "secondary.300");
+
   return (
-    <Box
-      as="footer"
-      bg="headerFooterBg"
-      p={4}
-      color="text.light"
-      textAlign="center"
-    >
+    <Box as="footer" bg={footerBg} p={4} color={textColor} textAlign="center">
       <Flex
         justify="space-between"
         align="center"
@@ -35,7 +44,7 @@ const Footer = () => {
               icon={<FaGithub />}
               aria-label="GitHub"
               variant="ghost"
-              _hover={{ bg: "secondary.300" }}
+              _hover={{ bg: iconHoverBg }}
             />
           </Link>
           <Link href="#" isExternal>
@@ -43,7 +52,7 @@ const Footer = () => {
               icon={<FaInstagram />}
               aria-label="Instagram"
               variant="ghost"
-              _hover={{ bg: "secondary.300" }}
+              _hover={{ bg: iconHoverBg }}
             />
           </Link>
           <Link href="#" isExternal>
@@ -51,7 +60,7 @@ const Footer = () => {
               icon={<FaTelegramPlane />}
               aria-label="Telegram"
               variant="ghost"
-              _hover={{ bg: "secondary.300" }}
+              _hover={{ bg: iconHoverBg }}
             />
           </Link>
         </Flex>
