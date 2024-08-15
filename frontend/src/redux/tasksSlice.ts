@@ -39,11 +39,13 @@ export const fetchTasks = createAsyncThunk(
     pageSize,
     categoryId,
     ordering,
+    search,
   }: {
     page: number;
     pageSize: number;
     categoryId?: number | null;
     ordering?: string;
+    search?: string;
   }) => {
     let url = `/tasks/?page=${page}&page_size=${pageSize}`;
     if (categoryId) {
@@ -51,6 +53,9 @@ export const fetchTasks = createAsyncThunk(
     }
     if (ordering) {
       url += `&ordering=${ordering}`;
+    }
+    if (search) {
+      url += `&search=${search}`;
     }
     const response = await api.get<TasksResponse>(url);
     return {
