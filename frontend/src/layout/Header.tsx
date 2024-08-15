@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import ColorModeSwitch from "../components/ColorModeSwitch";
-import SearchBar from "../components/Searchbar";
 import MobileMenu from "./MobileMenu";
 
 const Header = () => {
@@ -33,7 +32,6 @@ const Header = () => {
           _hover={{ bg: buttonHoverBg }}
         />
         <Flex display={{ base: "none", md: "flex" }} align="center" gap={4}>
-          <SearchBar onSearch={(query: string) => console.log(query)} />
           <Button variant="ghost" _hover={{ bg: buttonHoverBg }}>
             Home
           </Button>

@@ -8,7 +8,6 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import SearchBar from "../components/Searchbar";
 import ColorModeSwitch from "../components/ColorModeSwitch";
 
 const MobileMenu = ({ isOpen, onClose }: any) => {
@@ -26,7 +25,6 @@ const MobileMenu = ({ isOpen, onClose }: any) => {
           </DrawerHeader>
           <DrawerBody>
             <VStack align="start" spacing={4}>
-              <SearchBar onSearch={(query: string) => console.log(query)} />
               <Button
                 variant="ghost"
                 onClick={onClose}
