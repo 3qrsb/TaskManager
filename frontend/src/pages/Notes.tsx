@@ -11,6 +11,7 @@ import {
   FormLabel,
   Textarea,
   IconButton,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   fetchNotes,
@@ -21,6 +22,7 @@ import {
 import { RootState, AppDispatch } from "../redux/store";
 import { Note } from "../redux/notesSlice";
 import { DeleteIcon } from "@chakra-ui/icons";
+import NotesSkeleton from "../components/UI/NotesSkeleton";
 
 const Notes = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -34,6 +36,10 @@ const Notes = () => {
     text: "",
   });
   const [isAdding, setIsAdding] = useState(false);
+
+  const sidebarBg = useColorModeValue("gray.100", "gray.800");
+  const noteBg = useColorModeValue("white", "gray.700");
+  const selectedNoteBg = useColorModeValue("blue.50", "blue.900");
 
   useEffect(() => {
     dispatch(fetchNotes());
@@ -83,7 +89,8 @@ const Notes = () => {
     }
   };
 
-  if (status === "loading") return <Text>Loading...</Text>;
+  if (status === "loading") return <NotesSkeleton />;
+
   if (status === "failed") return <Text>Error: {error}</Text>;
 
   return (
@@ -93,7 +100,7 @@ const Notes = () => {
         overflowY="auto"
         height="calc(100vh - 70px)"
         p={4}
-        bg="gray.100"
+        bg={sidebarBg}
       >
         <VStack spacing={4} align="stretch">
           {isAdding ? (
@@ -103,7 +110,7 @@ const Notes = () => {
               overflow="hidden"
               p={4}
               shadow="md"
-              bg="white"
+              bg={noteBg}
             >
               <form onSubmit={handleSubmit}>
                 <FormControl id="title" mb={4}>
@@ -148,7 +155,7 @@ const Notes = () => {
               shadow="md"
               _hover={{ shadow: "lg", cursor: "pointer" }}
               transition="all 0.3s"
-              bg={selectedNote?.id === note.id ? "blue.50" : "white"}
+              bg={selectedNote?.id === note.id ? selectedNoteBg : noteBg}
               onClick={() => handleNoteClick(note)}
             >
               <Flex justifyContent="space-between" alignItems="center">
@@ -167,7 +174,7 @@ const Notes = () => {
           ))}
         </VStack>
       </Box>
-      <Box width="70%" p={4} bg="gray.50">
+      <Box width="70%" p={4} ml={1} borderRadius="lg" bg={noteBg}>
         {selectedNote ? (
           <Box>
             <FormControl id="title" mb={4}>
