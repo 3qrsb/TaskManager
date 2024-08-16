@@ -54,8 +54,9 @@ const Sidebar = () => {
       as="nav"
       bg={bgColor}
       w={isCollapsed ? "60px" : "200px"}
+      maxW="20%"
       transition="width 0.2s"
-      h="84vh"
+      minH="100vh"
       p={4}
       position="sticky"
       top="0"
