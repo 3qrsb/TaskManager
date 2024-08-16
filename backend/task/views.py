@@ -37,7 +37,7 @@ class CategoryViewSet(ModelViewSet):
     serializer_class = CategorySerilizer
     
 
-class NoteViewSet(CreateModelMixin, UpdateModelMixin, DestroyModelMixin, ListModelMixin, GenericViewSet):
+class NoteViewSet(ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
     filter_backends = [SearchFilter]
