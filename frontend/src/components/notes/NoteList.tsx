@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { Note } from "../../redux/notesSlice";
 import { DeleteIcon } from "@chakra-ui/icons";
+import { stripHtmlTags, truncateText } from "../../utils/noteUtils";
 
 interface NoteListProps {
   notes: Note[];
@@ -102,7 +103,7 @@ const NoteList: React.FC<NoteListProps> = ({
         >
           <Flex justifyContent="space-between" alignItems="center">
             <Text fontSize="xl" fontWeight="bold">
-              {note.title}
+              {truncateText(note.title, 20)}
             </Text>
             <IconButton
               aria-label="Delete note"
@@ -111,7 +112,7 @@ const NoteList: React.FC<NoteListProps> = ({
               onClick={() => handleDelete(note.id)}
             />
           </Flex>
-          <Text mt={2}>{note.text}</Text>
+          <Text mt={2}>{truncateText(stripHtmlTags(note.text), 80)}</Text>
         </Box>
       ))}
     </VStack>
