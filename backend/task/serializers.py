@@ -32,8 +32,8 @@ class CategorySerilizer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'title']
 
-
+# fara clown, why dont u setup backend correctly?
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = ['title', 'text', 'created_at']
+        fields = ['id', 'title', 'text', 'created_at']

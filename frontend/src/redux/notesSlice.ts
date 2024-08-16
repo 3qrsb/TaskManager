@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../utils/api";
 
-interface Note {
+export interface Note {
   id: number;
   title: string;
   text: string;
@@ -31,6 +31,25 @@ export const addNote = createAsyncThunk<Note, Omit<Note, "id">>(
   }
 );
 
+export const updateNote = createAsyncThunk<Note, Note>(
+  "notes/updateNote",
+  async (updatedNote: Note) => {
+    const response = await api.put<Note, Note>(
+      `/notes/${updatedNote.id}/`,
+      updatedNote
+    );
+    return response;
+  }
+);
+
+export const deleteNote = createAsyncThunk<number, number>(
+  "notes/deleteNote",
+  async (noteId: number) => {
+    await api.delete(`/notes/${noteId}/`);
+    return noteId;
+  }
+);
+
 const notesSlice = createSlice({
   name: "notes",
   initialState,
@@ -50,6 +69,17 @@ const notesSlice = createSlice({
       })
       .addCase(addNote.fulfilled, (state, action) => {
         state.notes.push(action.payload);
+      })
+      .addCase(updateNote.fulfilled, (state, action) => {
+        const index = state.notes.findIndex(
+          (note) => note.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.notes[index] = action.payload;
+        }
+      })
+      .addCase(deleteNote.fulfilled, (state, action) => {
+        state.notes = state.notes.filter((note) => note.id !== action.payload);
       });
   },
 });
