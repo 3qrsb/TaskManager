@@ -84,7 +84,7 @@ const Notes = () => {
       <Box
         width="30%"
         overflowY="auto"
-        height="calc(100vh - 70px)"
+        height="calc(100vh - 30px)"
         p={4}
         bg={noteListBg}
         borderRadius="lg"
