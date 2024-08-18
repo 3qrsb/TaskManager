@@ -14,25 +14,17 @@ const toolbarOptions = [
   ["clean"],
 ];
 
-const editorOptions = {
-  theme: "snow",
-  placeholder: "Compose an epic...",
-  modules: {
-    toolbar: toolbarOptions,
-  },
-};
-
 interface NoteEditorProps {
   selectedNote: Note | null;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleBlur: () => void;
+  onChange: (note: Note) => void;
+  onBlur: () => void;
   noteBg: string;
 }
 
 const NoteEditor: React.FC<NoteEditorProps> = ({
   selectedNote,
-  handleChange,
-  handleBlur,
+  onChange,
+  onBlur,
   noteBg,
 }) => {
   const [title, setTitle] = useState("");
@@ -48,29 +40,29 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
   }, [selectedNote]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedNote = { ...selectedNote, title: e.target.value } as Note;
     setTitle(e.target.value);
-    handleChange(e);
+    onChange(updatedNote);
   };
 
   const handleTextChange = (value: string) => {
+    const updatedNote = { ...selectedNote, text: value } as Note;
     setText(value);
     setCharCount(stripHtmlTags(value).length);
-    handleChange({
-      target: { name: "text", value },
-    } as React.ChangeEvent<HTMLInputElement>);
+    onChange(updatedNote);
   };
 
   return (
     <Box width="70%" p={4} ml={1} borderRadius="lg" bg={noteBg}>
       {selectedNote ? (
-        <Box>
+        <>
           <FormControl id="title" mb={4}>
             <FormLabel fontSize="xl">Title</FormLabel>
             <Input
               name="title"
               value={title}
               onChange={handleTitleChange}
-              onBlur={handleBlur}
+              onBlur={onBlur}
               variant="flushed"
               pl={3}
             />
@@ -80,16 +72,16 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
             <ReactQuill
               value={text}
               onChange={handleTextChange}
-              onBlur={handleBlur}
-              modules={editorOptions.modules}
-              theme={editorOptions.theme}
-              placeholder={editorOptions.placeholder}
+              onBlur={onBlur}
+              modules={{ toolbar: toolbarOptions }}
+              theme="snow"
+              placeholder="Compose an epic..."
             />
             <Text mt={2} fontSize="sm" color="gray.500">
               Character Count: {charCount}
             </Text>
           </FormControl>
-        </Box>
+        </>
       ) : (
         <Text>Select a note to view and edit its content</Text>
       )}

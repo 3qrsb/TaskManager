@@ -35,23 +35,28 @@ const Notes = () => {
     dispatch(fetchNotes());
   }, [dispatch]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    if (isAdding) {
-      setNewNote({
-        ...newNote,
-        [e.target.name]: e.target.value,
-      });
-    } else if (selectedNote) {
-      setSelectedNote({
-        ...selectedNote,
-        [e.target.name]: e.target.value,
-      });
+  const handleNoteChange = (updatedNote: Note) => {
+    setSelectedNote(updatedNote);
+  };
+
+  const handleBlur = async () => {
+    if (selectedNote && selectedNote.id) {
+      await dispatch(updateNote(selectedNote));
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleDelete = async (noteId: number) => {
+    await dispatch(deleteNote(noteId));
+    if (selectedNote?.id === noteId) {
+      setSelectedNote(null);
+    }
+  };
+
+  const handleNewNoteChange = (note: Omit<Note, "id">) => {
+    setNewNote(note);
+  };
+
+  const handleSubmitNewNote = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newNote.title && newNote.text) {
       await dispatch(addNote(newNote));
@@ -60,44 +65,30 @@ const Notes = () => {
     }
   };
 
-  const handleBlur = async () => {
-    if (selectedNote && selectedNote.id) {
-      await dispatch(updateNote(selectedNote));
-    } else {
-      console.error("Cannot update note: ID is undefined");
-    }
-  };
-
-  const handleDelete = async (noteId: number) => {
-    await dispatch(deleteNote(noteId));
-    if (selectedNote && selectedNote.id === noteId) {
-      setSelectedNote(null);
-    }
-  };
+  const toggleAdding = () => setIsAdding(!isAdding);
 
   if (status === "loading") return <NotesSkeleton />;
-
-  if (status === "failed") return <Text>Error: {error}</Text>;
+  if (error) return <Text>Error loading notes: {error}</Text>;
 
   return (
-    <Flex>
+    <Flex direction="row" height="100%">
       <Box
         width="30%"
-        overflowY="auto"
-        height="calc(100vh - 30px)"
         p={4}
-        bg={noteListBg}
         borderRadius="lg"
+        bg={noteListBg}
+        maxH="calc(100vh - 30px)"
+        overflowY="auto"
       >
         <NoteList
           notes={notes}
           selectedNote={selectedNote}
-          setSelectedNote={setSelectedNote}
-          handleDelete={handleDelete}
+          onSelectNote={setSelectedNote}
+          onDeleteNote={handleDelete}
           isAdding={isAdding}
-          setIsAdding={setIsAdding}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
+          toggleAdding={toggleAdding}
+          onNewNoteChange={handleNewNoteChange}
+          onSubmitNewNote={handleSubmitNewNote}
           newNote={newNote}
           noteBg={noteCardBg}
           selectedNoteBg={selectedNoteBg}
@@ -105,8 +96,8 @@ const Notes = () => {
       </Box>
       <NoteEditor
         selectedNote={selectedNote}
-        handleChange={handleChange}
-        handleBlur={handleBlur}
+        onChange={handleNoteChange}
+        onBlur={handleBlur}
         noteBg={noteEditorBg}
       />
     </Flex>
