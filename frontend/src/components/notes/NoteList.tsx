@@ -11,21 +11,19 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-import { Note } from "../../redux/notesSlice";
 import { DeleteIcon } from "@chakra-ui/icons";
+import { Note } from "../../redux/notesSlice";
 import { stripHtmlTags, truncateText } from "../../utils/noteUtils";
 
 interface NoteListProps {
   notes: Note[];
   selectedNote: Note | null;
-  setSelectedNote: (note: Note) => void;
-  handleDelete: (noteId: number) => void;
+  onSelectNote: (note: Note) => void;
+  onDeleteNote: (noteId: number) => void;
   isAdding: boolean;
-  setIsAdding: (value: boolean) => void;
-  handleChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
-  handleSubmit: (e: React.FormEvent) => void;
+  toggleAdding: () => void;
+  onNewNoteChange: (note: Omit<Note, "id">) => void;
+  onSubmitNewNote: (e: React.FormEvent) => void;
   newNote: Omit<Note, "id">;
   noteBg: string;
   selectedNoteBg: string;
@@ -34,12 +32,12 @@ interface NoteListProps {
 const NoteList: React.FC<NoteListProps> = ({
   notes,
   selectedNote,
-  setSelectedNote,
-  handleDelete,
+  onSelectNote,
+  onDeleteNote,
   isAdding,
-  setIsAdding,
-  handleChange,
-  handleSubmit,
+  toggleAdding,
+  onNewNoteChange,
+  onSubmitNewNote,
   newNote,
   noteBg,
   selectedNoteBg,
@@ -55,13 +53,15 @@ const NoteList: React.FC<NoteListProps> = ({
           shadow="md"
           bg={noteBg}
         >
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(e) => onSubmitNewNote(e)}>
             <FormControl id="title" mb={4}>
               <FormLabel>Title</FormLabel>
               <Input
                 name="title"
                 value={newNote.title}
-                onChange={handleChange}
+                onChange={(e) =>
+                  onNewNoteChange({ ...newNote, title: e.target.value })
+                }
                 required
               />
             </FormControl>
@@ -70,20 +70,22 @@ const NoteList: React.FC<NoteListProps> = ({
               <Textarea
                 name="text"
                 value={newNote.text}
-                onChange={handleChange}
+                onChange={(e) =>
+                  onNewNoteChange({ ...newNote, text: e.target.value })
+                }
                 required
               />
             </FormControl>
             <Button type="submit" colorScheme="teal">
               Add Note
             </Button>
-            <Button onClick={() => setIsAdding(false)} ml={4}>
+            <Button onClick={toggleAdding} ml={4}>
               Cancel
             </Button>
           </form>
         </Box>
       ) : (
-        <Button onClick={() => setIsAdding(true)} colorScheme="teal">
+        <Button onClick={toggleAdding} colorScheme="teal">
           Add Note
         </Button>
       )}
@@ -99,7 +101,7 @@ const NoteList: React.FC<NoteListProps> = ({
           _hover={{ shadow: "lg", cursor: "pointer" }}
           transition="all 0.3s"
           bg={selectedNote?.id === note.id ? selectedNoteBg : noteBg}
-          onClick={() => setSelectedNote(note)}
+          onClick={() => onSelectNote(note)}
         >
           <Flex justifyContent="space-between" alignItems="center">
             <Text fontSize="xl" fontWeight="bold">
@@ -109,7 +111,7 @@ const NoteList: React.FC<NoteListProps> = ({
               aria-label="Delete note"
               icon={<DeleteIcon />}
               size="sm"
-              onClick={() => handleDelete(note.id)}
+              onClick={() => onDeleteNote(note.id)}
             />
           </Flex>
           <Text mt={2}>{truncateText(stripHtmlTags(note.text), 80)}</Text>
