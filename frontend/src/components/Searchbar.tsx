@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input, InputGroup, InputRightElement, Button } from "@chakra-ui/react";
 import { CloseIcon, SearchIcon } from "@chakra-ui/icons";
 
@@ -6,14 +6,20 @@ interface SearchBarProps {
   onSearch: (query: string) => void;
   onClearSearch: () => void;
   searchTerm: string;
+  placeholder?: string;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
   onClearSearch,
   searchTerm,
+  placeholder = "Search...",
 }) => {
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
+
+  useEffect(() => {
+    setLocalSearchTerm(searchTerm);
+  }, [searchTerm]);
 
   const handleSearch = () => {
     onSearch(localSearchTerm);
@@ -29,7 +35,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       <Input
         pr="4.5rem"
         type="text"
-        placeholder="Search tasks..."
+        placeholder={placeholder}
         value={localSearchTerm}
         onChange={(e) => setLocalSearchTerm(e.target.value)}
         onKeyDown={(e) => {

@@ -219,6 +219,7 @@ const Tasks = () => {
             onSearch={handleSearch}
             onClearSearch={handleClearSearch}
             searchTerm={searchTerm}
+            placeholder="Search for tasks..."
           />
           <Button
             leftIcon={<AddIcon />}

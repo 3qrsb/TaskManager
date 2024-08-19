@@ -11,7 +11,7 @@ from .serializers import TaskSerializer, AddTaskSerializer, UpdateStageSerialize
 class TaskViewSet(ModelViewSet):
     pagination_class = CustomPageNumberPagination
     filter_backends = [OrderingFilter, SearchFilter]
-    ordering_fields = ['stage', 'created_at']
+    ordering_fields = ['stage', 'created_at', 'title']
     search_fields = ['title', 'description']
 
     def get_queryset(self):
@@ -40,5 +40,7 @@ class CategoryViewSet(ModelViewSet):
 class NoteViewSet(ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
-    filter_backends = [SearchFilter]
+    filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title', 'text']
+    ordering_fields = ['created_at', 'title']
+    ordering = ['created_at']
