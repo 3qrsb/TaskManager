@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Task, Category, Note
+from .models import Task, Category, Note, Customer
 from datetime import date
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -36,4 +36,12 @@ class CategorySerilizer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = ['id', 'title', 'text', 'created_at']
+        fields = ['title', 'text', 'created_at']
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField()
+    
+    class Meta:
+        model = Customer
+        fields = ['id', 'user_id', 'phone', 'birth_date']
