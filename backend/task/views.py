@@ -1,11 +1,11 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, DestroyModelMixin, ListModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, ListModelMixin
 from rest_framework.filters import OrderingFilter, SearchFilter
 from .pagination import CustomPageNumberPagination
-from .models import Task, Category, Note
-from .serializers import TaskSerializer, AddTaskSerializer, UpdateStageSerializer, CategorySerilizer, NoteSerializer
+from .models import Task, Category, Note, Customer
+from .serializers import TaskSerializer, AddTaskSerializer, UpdateStageSerializer, CategorySerilizer, NoteSerializer, CustomerSerializer
 
 
 class TaskViewSet(ModelViewSet):
@@ -42,3 +42,11 @@ class NoteViewSet(CreateModelMixin, UpdateModelMixin, DestroyModelMixin, ListMod
     serializer_class = NoteSerializer
     filter_backends = [SearchFilter]
     search_fields = ['title', 'text']
+
+
+class CustomerViewSet(CreateModelMixin,
+                      RetrieveModelMixin,
+                      UpdateModelMixin,
+                      GenericViewSet):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer

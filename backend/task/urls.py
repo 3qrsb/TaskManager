@@ -6,5 +6,6 @@ router = DefaultRouter()
 router.register('tasks', views.TaskViewSet, basename='tasks')
 router.register('categories', views.CategoryViewSet)
 router.register('notes', views.NoteViewSet)
+router.register('customers', views.CustomerViewSet)
 
 urlpatterns = router.urls
