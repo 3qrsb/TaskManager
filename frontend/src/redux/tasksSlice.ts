@@ -6,7 +6,7 @@ export interface Task {
   title: string;
   description: string;
   stage: string;
-  category: string | null;
+  category: number | null;
   created_at: string;
   completion_date: string;
 }
@@ -34,10 +34,30 @@ const initialState: TasksState = {
 
 export const fetchTasks = createAsyncThunk(
   "tasks/fetchTasks",
-  async ({ page, pageSize }: { page: number; pageSize: number }) => {
-    const response = await api.get<TasksResponse>(
-      `/tasks/?page=${page}&page_size=${pageSize}`
-    );
+  async ({
+    page,
+    pageSize,
+    categoryId,
+    ordering,
+    search,
+  }: {
+    page: number;
+    pageSize: number;
+    categoryId?: number | null;
+    ordering?: string;
+    search?: string;
+  }) => {
+    let url = `/tasks/?page=${page}&page_size=${pageSize}`;
+    if (categoryId) {
+      url += `&category_id=${categoryId}`;
+    }
+    if (ordering) {
+      url += `&ordering=${ordering}`;
+    }
+    if (search) {
+      url += `&search=${search}`;
+    }
+    const response = await api.get<TasksResponse>(url);
     return {
       tasks: response.results,
       totalPages: Math.ceil(response.count / pageSize),

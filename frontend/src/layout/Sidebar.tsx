@@ -27,7 +27,7 @@ const Sidebar = () => {
 
   const iconSize = 24;
   const chevronSize = 13;
-  const bgHover = useColorModeValue("blue.200", "gray.700");
+  const bgHover = useColorModeValue("primary.100", "primary.300");
   const bgColor = useColorModeValue("sidebarBg.light", "sidebarBg.dark");
   const iconButtonBgColor = useColorModeValue("gray.300", "gray.700");
 
@@ -54,10 +54,12 @@ const Sidebar = () => {
       as="nav"
       bg={bgColor}
       w={isCollapsed ? "60px" : "200px"}
+      maxW="20%"
       transition="width 0.2s"
-      h="80vh"
+      minH="100vh"
       p={4}
-      position="relative"
+      position="sticky"
+      top="0"
       onMouseEnter={onOpen}
       onMouseLeave={onClose}
     >

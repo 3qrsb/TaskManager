@@ -1,41 +1,62 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Flex, Box, Text, useColorModeValue } from "@chakra-ui/react";
 import {
-  Box,
-  SimpleGrid,
-  Text,
-  VStack,
-  Button,
-  Input,
-  FormControl,
-  FormLabel,
-  Textarea,
-} from "@chakra-ui/react";
-import { fetchNotes, addNote } from "../redux/notesSlice";
+  fetchNotes,
+  addNote,
+  updateNote,
+  deleteNote,
+} from "../redux/notesSlice";
 import { RootState, AppDispatch } from "../redux/store";
+import { Note } from "../redux/notesSlice";
+import NotesSkeleton from "../components/UI/NotesSkeleton";
+import NoteList from "../components/notes/NoteList";
+import NoteEditor from "../components/notes/NoteEditor";
 
 const Notes = () => {
   const dispatch: AppDispatch = useDispatch();
   const { notes, status, error } = useSelector(
     (state: RootState) => state.notesSlice
   );
-  const [newNote, setNewNote] = useState({ title: "", text: "" });
+
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [newNote, setNewNote] = useState<Omit<Note, "id">>({
+    title: "",
+    text: "",
+  });
   const [isAdding, setIsAdding] = useState(false);
+
+  const noteListBg = useColorModeValue("gray.50", "gray.800");
+  const noteEditorBg = useColorModeValue("gray.50", "gray.900");
+  const noteCardBg = useColorModeValue("gray.100", "gray.700");
+  const selectedNoteBg = useColorModeValue("blue.100", "blue.900");
 
   useEffect(() => {
     dispatch(fetchNotes());
   }, [dispatch]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setNewNote({
-      ...newNote,
-      [e.target.name]: e.target.value,
-    });
+  const handleNoteChange = (updatedNote: Note) => {
+    setSelectedNote(updatedNote);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleBlur = async () => {
+    if (selectedNote && selectedNote.id) {
+      await dispatch(updateNote(selectedNote));
+    }
+  };
+
+  const handleDelete = async (noteId: number) => {
+    await dispatch(deleteNote(noteId));
+    if (selectedNote?.id === noteId) {
+      setSelectedNote(null);
+    }
+  };
+
+  const handleNewNoteChange = (note: Omit<Note, "id">) => {
+    setNewNote(note);
+  };
+
+  const handleSubmitNewNote = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newNote.title && newNote.text) {
       await dispatch(addNote(newNote));
@@ -44,72 +65,42 @@ const Notes = () => {
     }
   };
 
-  if (status === "loading") return <Text>Loading...</Text>;
-  if (status === "failed") return <Text>Error: {error}</Text>;
+  const toggleAdding = () => setIsAdding(!isAdding);
+
+  if (status === "loading") return <NotesSkeleton />;
+  if (error) return <Text>Error loading notes: {error}</Text>;
 
   return (
-    <VStack spacing={4} align="stretch">
-      {isAdding ? (
-        <Box
-          borderWidth="1px"
-          borderRadius="lg"
-          overflow="hidden"
-          p={4}
-          shadow="md"
-        >
-          <form onSubmit={handleSubmit}>
-            <FormControl id="title" mb={4}>
-              <FormLabel>Title</FormLabel>
-              <Input
-                name="title"
-                value={newNote.title}
-                onChange={handleChange}
-                required
-              />
-            </FormControl>
-            <FormControl id="text" mb={4}>
-              <FormLabel>Text</FormLabel>
-              <Textarea
-                name="text"
-                value={newNote.text}
-                onChange={handleChange}
-                required
-              />
-            </FormControl>
-            <Button type="submit" colorScheme="blue">
-              Add Note
-            </Button>
-            <Button onClick={() => setIsAdding(false)} ml={4}>
-              Cancel
-            </Button>
-          </form>
-        </Box>
-      ) : (
-        <Button onClick={() => setIsAdding(true)} colorScheme="blue">
-          Add Note
-        </Button>
-      )}
-
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
-        {notes.map((note) => (
-          <Box
-            key={note.id}
-            borderWidth="1px"
-            borderRadius="lg"
-            overflow="hidden"
-            p={4}
-            shadow="md"
-            _hover={{ shadow: "lg" }}
-            transition="all 0.3s"
-          >
-            <Text fontSize="xl" fontWeight="bold">
-              {note.title}
-            </Text>
-            <Text mt={2}>{note.text}</Text>
-          </Box>
-        ))}
-      </SimpleGrid>
-    </VStack>
+    <Flex direction="row" height="100%">
+      <Box
+        width="30%"
+        p={4}
+        borderRadius="lg"
+        bg={noteListBg}
+        maxH="calc(100vh - 30px)"
+        overflowY="auto"
+      >
+        <NoteList
+          notes={notes}
+          selectedNote={selectedNote}
+          onSelectNote={setSelectedNote}
+          onDeleteNote={handleDelete}
+          isAdding={isAdding}
+          toggleAdding={toggleAdding}
+          onNewNoteChange={handleNewNoteChange}
+          onSubmitNewNote={handleSubmitNewNote}
+          newNote={newNote}
+          noteBg={noteCardBg}
+          selectedNoteBg={selectedNoteBg}
+        />
+      </Box>
+      <NoteEditor
+        selectedNote={selectedNote}
+        onChange={handleNoteChange}
+        onBlur={handleBlur}
+        noteBg={noteEditorBg}
+      />
+    </Flex>
   );
 };
 

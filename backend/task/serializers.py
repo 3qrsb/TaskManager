@@ -3,7 +3,7 @@ from .models import Task, Category, Note, Customer
 from datetime import date
 
 class TaskSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), allow_null=True, required=False)
 
     class Meta:
         model = Task
@@ -32,7 +32,7 @@ class CategorySerilizer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'title']
 
-
+# fara clown, why dont u setup backend correctly?
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
