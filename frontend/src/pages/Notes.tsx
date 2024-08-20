@@ -12,6 +12,8 @@ import { Note } from "../redux/notesSlice";
 import NotesSkeleton from "../components/UI/NotesSkeleton";
 import NoteList from "../components/notes/NoteList";
 import NoteEditor from "../components/notes/NoteEditor";
+import SearchBar from "../components/SearchBar";
+import CustomDropdown from "../components/UI/CustomDropdown";
 
 const Notes = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -25,6 +27,8 @@ const Notes = () => {
     text: "",
   });
   const [isAdding, setIsAdding] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("created_at");
 
   const noteListBg = useColorModeValue("gray.50", "gray.800");
   const noteEditorBg = useColorModeValue("gray.50", "gray.900");
@@ -32,8 +36,20 @@ const Notes = () => {
   const selectedNoteBg = useColorModeValue("blue.100", "blue.900");
 
   useEffect(() => {
-    dispatch(fetchNotes());
-  }, [dispatch]);
+    dispatch(fetchNotes({ searchTerm, sortOrder }));
+  }, [dispatch, searchTerm, sortOrder]);
+
+  const handleSearch = (query: string) => {
+    setSearchTerm(query);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+  };
+
+  const handleSortChange = (order: string | null) => {
+    setSortOrder(order ?? "created_at");
+  };
 
   const handleNoteChange = (updatedNote: Note) => {
     setSelectedNote(updatedNote);
@@ -70,6 +86,11 @@ const Notes = () => {
   if (status === "loading") return <NotesSkeleton />;
   if (error) return <Text>Error loading notes: {error}</Text>;
 
+  const sortOptions = [
+    { id: "created_at", title: "Date Created" },
+    { id: "title", title: "Title" },
+  ];
+
   return (
     <Flex direction="row" height="100%">
       <Box
@@ -80,6 +101,22 @@ const Notes = () => {
         maxH="calc(100vh - 30px)"
         overflowY="auto"
       >
+        <Box m={4}>
+          <SearchBar
+            onSearch={handleSearch}
+            onClearSearch={handleClearSearch}
+            searchTerm={searchTerm}
+            placeholder="Search notes..."
+          />
+        </Box>
+        <CustomDropdown
+          label="Sort By"
+          items={sortOptions}
+          selectedItem={sortOrder}
+          onChange={handleSortChange}
+          maxWidth="200px"
+          size="sm"
+        />
         <NoteList
           notes={notes}
           selectedNote={selectedNote}

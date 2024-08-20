@@ -36,7 +36,7 @@ class CategorySerilizer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = ['title', 'text', 'created_at']
+        fields = ['id', 'title', 'text', 'created_at']
 
 
 class CustomerSerializer(serializers.ModelSerializer):
