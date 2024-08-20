@@ -36,7 +36,7 @@ import SearchBar from "../components/SearchBar";
 
 const Tasks = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { tasks, status, totalPages, totalCount, error } = useSelector(
+  const { tasks, status, totalPages, totalCount, error }: any = useSelector(
     (state: RootState) => state.tasksSlice
   );
   const { categories } = useSelector(
@@ -215,12 +215,14 @@ const Tasks = () => {
           <Heading as="h2" size="lg">
             Tasks
           </Heading>
-          <SearchBar
-            onSearch={handleSearch}
-            onClearSearch={handleClearSearch}
-            searchTerm={searchTerm}
-            placeholder="Search for tasks..."
-          />
+          <Box width="50%">
+            <SearchBar
+              onSearch={handleSearch}
+              onClearSearch={handleClearSearch}
+              searchTerm={searchTerm}
+              placeholder="Search for tasks..."
+            />
+          </Box>
           <Button
             leftIcon={<AddIcon />}
             colorScheme="teal"

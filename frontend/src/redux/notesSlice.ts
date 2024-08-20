@@ -19,9 +19,22 @@ const initialState: NotesState = {
   error: null,
 };
 
-export const fetchNotes = createAsyncThunk("notes/fetchNotes", async () => {
-  return await api.get<Note[]>("/notes/");
-});
+export const fetchNotes = createAsyncThunk(
+  "notes/fetchNotes",
+  async ({
+    searchTerm = "",
+    sortOrder = "created_at",
+  }: {
+    searchTerm?: string;
+    sortOrder?: string;
+  }) => {
+    const params = {
+      search: searchTerm || undefined,
+      ordering: sortOrder,
+    };
+    return await api.get<Note[]>("/notes/", { params });
+  }
+);
 
 export const addNote = createAsyncThunk<Note, Omit<Note, "id">>(
   "notes/addNote",

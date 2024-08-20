@@ -31,7 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <InputGroup size="md" ml={4} mr={4}>
+    <InputGroup size="md">
       <Input
         pr="4.5rem"
         type="text"
