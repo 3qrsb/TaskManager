@@ -2,6 +2,7 @@ import React from "react";
 import {
   Box,
   VStack,
+  Button,
   IconButton,
   Flex,
   Text,
@@ -9,7 +10,6 @@ import {
   FormLabel,
   Input,
   Textarea,
-  Button,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
@@ -23,9 +23,9 @@ interface NoteListProps {
   onDeleteNote: (noteId: number) => void;
   isAdding: boolean;
   toggleAdding: () => void;
-  newNote: Omit<Note, "id">;
   onNewNoteChange: (note: Omit<Note, "id">) => void;
   onSubmitNewNote: (e: React.FormEvent) => void;
+  newNote: Omit<Note, "id">;
   noteBg: string;
   selectedNoteBg: string;
 }
@@ -37,19 +37,25 @@ const NoteList: React.FC<NoteListProps> = ({
   onDeleteNote,
   isAdding,
   toggleAdding,
-  newNote,
   onNewNoteChange,
   onSubmitNewNote,
+  newNote,
   noteBg,
   selectedNoteBg,
 }) => {
   const textBg = useColorModeValue("gray.500", "gray.300");
-
   return (
     <VStack spacing={5} align="stretch">
       {isAdding ? (
-        <Box borderWidth="1px" borderRadius="lg" p={4} shadow="md" bg={noteBg}>
-          <form onSubmit={onSubmitNewNote}>
+        <Box
+          borderWidth="1px"
+          borderRadius="lg"
+          overflow="hidden"
+          p={4}
+          shadow="md"
+          bg={noteBg}
+        >
+          <form onSubmit={(e) => onSubmitNewNote(e)}>
             <FormControl id="title" mb={4}>
               <FormLabel>Title</FormLabel>
               <Input
@@ -80,13 +86,18 @@ const NoteList: React.FC<NoteListProps> = ({
             </Button>
           </form>
         </Box>
-      ) : null}
+      ) : (
+        <Button onClick={toggleAdding} colorScheme="teal">
+          Add Note
+        </Button>
+      )}
 
       {notes.map((note) => (
         <Box
           key={note.id}
           borderWidth="1px"
           borderRadius="lg"
+          overflow="hidden"
           p={4}
           shadow={selectedNote?.id === note.id ? "lg" : "md"}
           _hover={{ shadow: "lg", transform: "scale(1.02)", cursor: "pointer" }}
@@ -102,20 +113,15 @@ const NoteList: React.FC<NoteListProps> = ({
               aria-label="Delete note"
               icon={<DeleteIcon />}
               size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDeleteNote(note.id);
-              }}
+              onClick={() => onDeleteNote(note.id)}
               variant="ghost"
               colorScheme="red"
               _hover={{ color: "red.500", bg: "transparent" }}
             />
           </Flex>
-          <Box maxWidth="330px" maxHeight="60px" overflow="hidden" p={2}>
-            <Text fontSize="sm" mt={2} color={textBg}>
-              {truncateText(stripHtmlTags(note.text), 90)}
-            </Text>
-          </Box>
+          <Text mt={2} fontSize="sm" color={textBg}>
+            {truncateText(stripHtmlTags(note.text), 80)}
+          </Text>
         </Box>
       ))}
     </VStack>
