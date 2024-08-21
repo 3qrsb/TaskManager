@@ -94,7 +94,7 @@ const Notes = () => {
   return (
     <Flex direction="row" height="100%">
       <Box
-        width="30%"
+        width="35%"
         p={4}
         borderRadius="lg"
         bg={noteListBg}

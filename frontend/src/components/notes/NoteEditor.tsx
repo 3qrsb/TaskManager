@@ -53,7 +53,15 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
   };
 
   return (
-    <Box width="70%" p={4} ml={1} borderRadius="lg" bg={noteBg}>
+    <Box
+      width="70%"
+      p={4}
+      ml={1}
+      borderRadius="lg"
+      bg={noteBg}
+      height="calc(100vh - 30px)"
+      overflowY="auto"
+    >
       {selectedNote ? (
         <>
           <FormControl id="title" mb={4}>
@@ -64,6 +72,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
               onChange={handleTitleChange}
               onBlur={onBlur}
               variant="flushed"
+              placeholder="Where is ur title?"
               pl={3}
             />
           </FormControl>
