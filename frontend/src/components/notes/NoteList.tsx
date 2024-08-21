@@ -48,7 +48,14 @@ const NoteList: React.FC<NoteListProps> = ({
   return (
     <VStack spacing={5} align="stretch">
       {isAdding ? (
-        <Box borderWidth="1px" borderRadius="lg" p={4} shadow="md" bg={noteBg}>
+        <Box
+          borderWidth="1px"
+          borderRadius="lg"
+          overflow="hidden"
+          p={4}
+          shadow="md"
+          bg={noteBg}
+        >
           <form onSubmit={onSubmitNewNote}>
             <FormControl id="title" mb={4}>
               <FormLabel>Title</FormLabel>
@@ -80,7 +87,11 @@ const NoteList: React.FC<NoteListProps> = ({
             </Button>
           </form>
         </Box>
-      ) : null}
+      ) : (
+        <Button onClick={toggleAdding} colorScheme="teal">
+          Add Note
+        </Button>
+      )}
 
       {notes.map((note) => (
         <Box
@@ -111,11 +122,9 @@ const NoteList: React.FC<NoteListProps> = ({
               _hover={{ color: "red.500", bg: "transparent" }}
             />
           </Flex>
-          <Box maxWidth="330px" maxHeight="60px" overflow="hidden" p={2}>
-            <Text fontSize="sm" mt={2} color={textBg}>
-              {truncateText(stripHtmlTags(note.text), 90)}
-            </Text>
-          </Box>
+          <Text mt={2} fontSize="sm" color={textBg}>
+            {truncateText(stripHtmlTags(note.text), 80)}
+          </Text>
         </Box>
       ))}
     </VStack>
