@@ -10,6 +10,7 @@ import {
   FormLabel,
   Input,
   Textarea,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { Note } from "../../redux/notesSlice";
@@ -42,8 +43,9 @@ const NoteList: React.FC<NoteListProps> = ({
   noteBg,
   selectedNoteBg,
 }) => {
+  const textBg = useColorModeValue("gray.500", "gray.300");
   return (
-    <VStack spacing={4} align="stretch">
+    <VStack spacing={5} align="stretch">
       {isAdding ? (
         <Box
           borderWidth="1px"
@@ -97,14 +99,14 @@ const NoteList: React.FC<NoteListProps> = ({
           borderRadius="lg"
           overflow="hidden"
           p={4}
-          shadow="md"
-          _hover={{ shadow: "lg", cursor: "pointer" }}
-          transition="all 0.3s"
+          shadow={selectedNote?.id === note.id ? "lg" : "md"}
+          _hover={{ shadow: "lg", transform: "scale(1.02)", cursor: "pointer" }}
+          transition="all 0.3s ease-in-out"
           bg={selectedNote?.id === note.id ? selectedNoteBg : noteBg}
           onClick={() => onSelectNote(note)}
         >
           <Flex justifyContent="space-between" alignItems="center">
-            <Text fontSize="xl" fontWeight="bold">
+            <Text fontSize="lg" fontWeight="semibold">
               {truncateText(note.title, 20)}
             </Text>
             <IconButton
@@ -112,9 +114,14 @@ const NoteList: React.FC<NoteListProps> = ({
               icon={<DeleteIcon />}
               size="sm"
               onClick={() => onDeleteNote(note.id)}
+              variant="ghost"
+              colorScheme="red"
+              _hover={{ color: "red.500", bg: "transparent" }}
             />
           </Flex>
-          <Text mt={2}>{truncateText(stripHtmlTags(note.text), 80)}</Text>
+          <Text mt={2} fontSize="sm" color={textBg}>
+            {truncateText(stripHtmlTags(note.text), 80)}
+          </Text>
         </Box>
       ))}
     </VStack>
