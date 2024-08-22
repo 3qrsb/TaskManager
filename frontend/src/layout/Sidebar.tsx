@@ -17,19 +17,22 @@ import {
   MdOutlineCalendarMonth,
 } from "react-icons/md";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const location = useLocation();
 
   const handleToggle = () => setIsCollapsed(!isCollapsed);
 
   const iconSize = 24;
   const chevronSize = 13;
-  const bgHover = useColorModeValue("primary.100", "primary.300");
-  const bgColor = useColorModeValue("sidebarBg.light", "sidebarBg.dark");
+  const bgHover = useColorModeValue("blue.200", "blue.700");
+  const bgColor = useColorModeValue("gray.200", "gray.900");
   const iconButtonBgColor = useColorModeValue("gray.300", "gray.700");
+  const activeBg = useColorModeValue("blue.400", "blue.600");
+  const activeTextColor = useColorModeValue("white", "gray.800");
 
   const sections = [
     {
@@ -94,26 +97,35 @@ const Sidebar = () => {
       </Tooltip>
       <Flex direction="column" align={isCollapsed ? "center" : "flex-start"}>
         <VStack spacing={4} align={isCollapsed ? "center" : "flex-start"}>
-          {sections.map((section) => (
-            <Flex
-              key={section.label}
-              align="center"
-              w="full"
-              cursor="pointer"
-              _hover={{ bg: bgHover }}
-              p={2}
-              borderRadius="md"
-              as={RouterLink}
-              to={section.path}
-            >
-              <section.icon size={section.size} />
-              {!isCollapsed && (
-                <Text ml={4} fontSize="md">
-                  {section.label}
-                </Text>
-              )}
-            </Flex>
-          ))}
+          {sections.map((section) => {
+            const isActive = location.pathname === section.path;
+            return (
+              <Flex
+                key={section.label}
+                align="center"
+                w="full"
+                cursor="pointer"
+                _hover={{
+                  bg: bgHover,
+                }}
+                bg={isActive ? activeBg : "transparent"}
+                color={isActive ? activeTextColor : "inherit"}
+                pl={isCollapsed ? "6px" : "20px"}
+                pr={isCollapsed ? "6px" : "20px"}
+                py="8px"
+                borderRadius="md"
+                as={RouterLink}
+                to={section.path}
+              >
+                <section.icon size={section.size} />
+                {!isCollapsed && (
+                  <Text ml={4} fontSize="md">
+                    {section.label}
+                  </Text>
+                )}
+              </Flex>
+            );
+          })}
         </VStack>
       </Flex>
     </Box>
