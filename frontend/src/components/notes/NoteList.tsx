@@ -111,9 +111,11 @@ const NoteList: React.FC<NoteListProps> = ({
               _hover={{ color: "red.500", bg: "transparent" }}
             />
           </Flex>
-          <Text fontSize="sm" mt={2} color={textBg}>
-            {truncateText(stripHtmlTags(note.text), 80)}
-          </Text>
+          <Box maxWidth="330px" maxHeight="60px" overflow="hidden" p={2}>
+            <Text fontSize="sm" mt={2} color={textBg}>
+              {truncateText(stripHtmlTags(note.text), 90)}
+            </Text>
+          </Box>
         </Box>
       ))}
     </VStack>
