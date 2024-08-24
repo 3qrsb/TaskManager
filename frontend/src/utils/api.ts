@@ -10,6 +10,18 @@ const apiClient = axios.create({
   baseURL: apiBaseUrl,
 });
 
+export const setAuthToken = (token: string | null) => {
+  if (token) {
+    apiClient.defaults.headers.common["Authorization"] = `JWT ${token}`;
+  } else {
+    delete apiClient.defaults.headers.common["Authorization"];
+  }
+};
+
+setAuthToken(
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0NjEwMTI2LCJpYXQiOjE3MjQ1MjM3MjYsImp0aSI6ImRkZmVmNTQwN2VkMjQxYzk4MGZjNmFmMGYzMDA1MGU2IiwidXNlcl9pZCI6M30.xxdtQPKVO28WaM1rRs7L8GLT22h8HOOfy84F8fMiX5E"
+);
+
 const api = {
   get: async <T>(endpoint: string, config?: AxiosRequestConfig): Promise<T> => {
     try {
