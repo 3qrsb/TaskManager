@@ -1,7 +1,6 @@
 import {
   Box,
   Flex,
-  Image,
   IconButton,
   Link,
   Text,
@@ -10,16 +9,14 @@ import {
 import { FaGithub, FaInstagram, FaTelegramPlane } from "react-icons/fa";
 
 const Footer = () => {
-  const footerBg = useColorModeValue(
-    "headerFooterBg.light",
-    "headerFooterBg.dark"
-  );
+  const footerBg = useColorModeValue("white", "gray.900");
   const textColor = useColorModeValue("text.light", "text.dark");
-  const iconHoverBg = useColorModeValue("secondary.100", "secondary.300");
+  const iconHoverBg = useColorModeValue("blue.200", "blue.700");
 
   return (
     <Box as="footer" bg={footerBg} p={4} color={textColor} textAlign="center">
       <Flex
+        direction={{ base: "column", md: "row" }}
         justify="space-between"
         align="center"
         maxW="1200px"
@@ -27,24 +24,22 @@ const Footer = () => {
         px={4}
         wrap="wrap"
       >
-        <Flex align="center" gap={2}>
-          <Image src="logo.webp" alt="Logo" boxSize="30px" />
-          <Text fontSize="lg" fontWeight="bold">
-            Noter
-          </Text>
-        </Flex>
-
-        <Text fontSize="sm" mt={{ base: 2, md: 0 }}>
+        <Text fontSize="sm" mb={{ base: 2, md: 0 }}>
           &copy; 2024 Noter. All rights reserved.
         </Text>
 
-        <Flex gap={4} mt={{ base: 2, md: 0 }}>
-          <Link href="#" isExternal>
+        <Flex
+          gap={4}
+          mt={{ base: 2, md: 0 }}
+          justify={{ base: "center", md: "flex-end" }}
+        >
+          <Link href="https://github.com/3qrsb/TaskManager" isExternal>
             <IconButton
               icon={<FaGithub />}
               aria-label="GitHub"
               variant="ghost"
               _hover={{ bg: iconHoverBg }}
+              size={{ base: "sm", md: "md" }}
             />
           </Link>
           <Link href="#" isExternal>
@@ -53,6 +48,7 @@ const Footer = () => {
               aria-label="Instagram"
               variant="ghost"
               _hover={{ bg: iconHoverBg }}
+              size={{ base: "sm", md: "md" }}
             />
           </Link>
           <Link href="#" isExternal>
@@ -61,6 +57,7 @@ const Footer = () => {
               aria-label="Telegram"
               variant="ghost"
               _hover={{ bg: iconHoverBg }}
+              size={{ base: "sm", md: "md" }}
             />
           </Link>
         </Flex>
