@@ -2,6 +2,12 @@ from django.db import models
 from django.conf import settings
 
 
+class Customer(models.Model):
+    phone = models.CharField(max_length=255)
+    birth_date = models.DateField(null=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    
+
 class Category(models.Model):
     title = models.CharField(max_length=255)
 
@@ -27,6 +33,7 @@ class Task(models.Model):
     category = models.ForeignKey(Category, null=True, on_delete=models.PROTECT, related_name='tasks')
     created_at = models.DateTimeField(auto_now_add=True)
     completion_date = models.DateField(default='2024-07-31')
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
     def __str__(self) -> str:
         return self.title
@@ -42,9 +49,3 @@ class Note(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-
-
-class Customer(models.Model):
-    phone = models.CharField(max_length=255)
-    birth_date = models.DateField(null=True)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
