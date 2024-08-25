@@ -14,7 +14,10 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <Box minH="100vh" display="flex" flexDirection="column" bg={bgColor}>
       <Header />
-      <Flex flex="1">
+      <Flex
+        flex="1"
+        flexDirection={{ base: "column", md: "row" }}
+      >
         <Sidebar />
         <Box flex="1" p={4}>
           {children}
