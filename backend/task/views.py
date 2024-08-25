@@ -18,13 +18,20 @@ class TaskViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        queryset = Task.objects.select_related('category').all()
+        user = self.request.user
+
         category_id = self.request.query_params.get('category_id')
         completion_date = self.request.query_params.get('completion_date')
+        (customer, created) = Customer.objects.get_or_create(user=user)
+
+        queryset = Task.objects.select_related('category').filter(customer_id=customer.id)
+
         if category_id is not None:
             queryset = queryset.filter(category_id=category_id)
-        elif completion_date is not None:
+        
+        if completion_date is not None:
             queryset = queryset.filter(completion_date=completion_date)
+
         return queryset
     
     def get_serializer_class(self):
