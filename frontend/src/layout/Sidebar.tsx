@@ -3,11 +3,9 @@ import {
   Box,
   Flex,
   IconButton,
-  VStack,
   Text,
   Tooltip,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import {
@@ -21,112 +19,104 @@ import { Link as RouterLink, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation();
 
   const handleToggle = () => setIsCollapsed(!isCollapsed);
 
   const iconSize = 24;
-  const chevronSize = 13;
   const bgHover = useColorModeValue("blue.200", "blue.700");
   const bgColor = useColorModeValue("gray.200", "gray.900");
-  const iconButtonBgColor = useColorModeValue("gray.300", "gray.700");
   const activeBg = useColorModeValue("blue.400", "blue.600");
   const activeTextColor = useColorModeValue("white", "gray.800");
 
   const sections = [
-    {
-      icon: MdOutlineDashboard,
-      label: "Dashboard",
-      path: "/dashboard",
-      size: iconSize,
-    },
-    { icon: MdAddTask, label: "Tasks", path: "/tasks", size: iconSize },
-    { icon: MdOutlineNoteAdd, label: "Note", path: "/note", size: iconSize },
-    {
-      icon: MdOutlineCalendarMonth,
-      label: "Calendar",
-      path: "/calendar",
-      size: iconSize,
-    },
-    { icon: FaRegTrashAlt, label: "Trash", path: "/trash", size: 20 },
+    { icon: MdOutlineDashboard, label: "Dashboard", path: "/dashboard" },
+    { icon: MdAddTask, label: "Tasks", path: "/tasks" },
+    { icon: MdOutlineNoteAdd, label: "Note", path: "/note" },
+    { icon: MdOutlineCalendarMonth, label: "Calendar", path: "/calendar" },
+    { icon: FaRegTrashAlt, label: "Trash", path: "/trash" },
   ];
 
   return (
     <Box
       as="nav"
       bg={bgColor}
-      w={isCollapsed ? "60px" : "200px"}
-      maxW="20%"
-      transition="width 0.2s"
-      minH="100vh"
-      p={4}
-      position="sticky"
+      w={{ base: "100%", md: isCollapsed ? "60px" : "200px" }}
+      transition="width 0.3s"
+      minH={{ base: "auto", md: "100vh" }}
+      maxH="100vh"
+      p={{ base: "2", md: "4" }}
+      position={{ base: "relative", md: "sticky" }}
       top="0"
-      onMouseEnter={onOpen}
-      onMouseLeave={onClose}
+      overflowY={{ base: "auto", md: "hidden" }}
     >
-      <Tooltip
-        label={isCollapsed ? "Expand" : "Collapse"}
-        placement="right"
-        hasArrow
+      <Flex
+        justify={isCollapsed ? "center" : "flex-end"}
+        mb={4}
+        display={{ base: "none", md: "flex" }}
+        align={isCollapsed ? "center" : "flex-start"}
       >
-        <IconButton
-          icon={
-            isCollapsed ? (
-              <FaChevronRight size={chevronSize} />
-            ) : (
-              <FaChevronLeft size={chevronSize} />
-            )
-          }
-          aria-label="Toggle Sidebar"
-          onClick={handleToggle}
-          position="absolute"
-          top={10}
-          right={isCollapsed ? "-11px" : "-11px"}
-          size="sm"
-          bg={iconButtonBgColor}
-          zIndex="10"
-          className="toggle-btn"
-          opacity={isOpen ? 1 : 0}
-          _hover={{ bg: bgHover }}
-          transition="opacity 0.2s"
-          minWidth={5}
-          height={10}
-        />
-      </Tooltip>
-      <Flex direction="column" align={isCollapsed ? "center" : "flex-start"}>
-        <VStack spacing={4} align={isCollapsed ? "center" : "flex-start"}>
-          {sections.map((section) => {
-            const isActive = location.pathname === section.path;
-            return (
-              <Flex
-                key={section.label}
-                align="center"
-                w="full"
-                cursor="pointer"
-                _hover={{
-                  bg: bgHover,
-                }}
-                bg={isActive ? activeBg : "transparent"}
-                color={isActive ? activeTextColor : "inherit"}
-                pl={isCollapsed ? "6px" : "20px"}
-                pr={isCollapsed ? "6px" : "20px"}
-                py="8px"
-                borderRadius="md"
-                as={RouterLink}
-                to={section.path}
+        <Tooltip
+          label={isCollapsed ? "Expand" : "Collapse"}
+          placement="right"
+          openDelay={1000}
+        >
+          <IconButton
+            icon={isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
+            aria-label="Toggle Sidebar"
+            onClick={handleToggle}
+            variant="ghost"
+            _hover={{ bg: useColorModeValue("gray.300", "gray.600") }}
+          />
+        </Tooltip>
+      </Flex>
+
+      <Flex
+        direction={{ base: "row", md: "column" }}
+        align="center"
+        justify={{ base: "space-around", md: "flex-start" }}
+        gap={3}
+        p={{ base: "1", md: "0" }}
+      >
+        {sections.map((section) => {
+          const isActive = location.pathname === section.path;
+          return (
+            <Flex
+              key={section.label}
+              align="center"
+              justify={isCollapsed ? "center" : "flex-start"}
+              cursor="pointer"
+              _hover={{ bg: bgHover }}
+              bg={isActive ? activeBg : "transparent"}
+              color={isActive ? activeTextColor : "inherit"}
+              w="100%"
+              px={
+                isCollapsed ? { base: "3", md: "5" } : { base: "4", md: "16px" }
+              }
+              py="10px"
+              borderRadius="md"
+              as={RouterLink}
+              to={section.path}
+              direction="row"
+              transition="background-color 0.3s ease"
+              position="relative"
+            >
+              <Box
+                boxSize={`${iconSize}px`}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
               >
-                <section.icon size={section.size} />
-                {!isCollapsed && (
-                  <Text ml={4} fontSize="md">
-                    {section.label}
-                  </Text>
-                )}
-              </Flex>
-            );
-          })}
-        </VStack>
+                <section.icon size={iconSize} />
+              </Box>
+              {!isCollapsed && (
+                <Text ml={4} fontSize="md" whiteSpace="nowrap">
+                  {section.label}
+                </Text>
+              )}
+            </Flex>
+          );
+        })}
       </Flex>
     </Box>
   );
