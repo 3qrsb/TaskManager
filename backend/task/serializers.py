@@ -33,6 +33,7 @@ class CategorySerilizer(serializers.ModelSerializer):
         fields = ['id', 'title']
 
 # fara clown, why dont u setup backend correctly?
+# ))
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
