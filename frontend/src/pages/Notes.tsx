@@ -67,7 +67,13 @@ const Notes = () => {
     }
   };
 
-  const toggleAdding = () => setIsAdding(!isAdding);
+  const toggleAdding = async () => {
+    if (!isAdding) {
+      const newBlankNote = { title: "", text: "" };
+      await dispatch(addNote(newBlankNote));
+    }
+    setIsAdding(!isAdding);
+  };
 
   const handleNewNoteChange = (updatedField: Partial<Omit<Note, "id">>) => {
     setNewNote((prev) => ({ ...prev, ...updatedField }));

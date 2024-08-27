@@ -5,11 +5,6 @@ import {
   IconButton,
   Flex,
   Text,
-  FormControl,
-  FormLabel,
-  Input,
-  Textarea,
-  Button,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
@@ -47,41 +42,6 @@ const NoteList: React.FC<NoteListProps> = ({
 
   return (
     <VStack spacing={5} align="stretch">
-      {isAdding ? (
-        <Box borderWidth="1px" borderRadius="lg" p={4} shadow="md" bg={noteBg}>
-          <form onSubmit={onSubmitNewNote}>
-            <FormControl id="title" mb={4}>
-              <FormLabel>Title</FormLabel>
-              <Input
-                name="title"
-                value={newNote.title}
-                onChange={(e) =>
-                  onNewNoteChange({ ...newNote, title: e.target.value })
-                }
-                required
-              />
-            </FormControl>
-            <FormControl id="text" mb={4}>
-              <FormLabel>Text</FormLabel>
-              <Textarea
-                name="text"
-                value={newNote.text}
-                onChange={(e) =>
-                  onNewNoteChange({ ...newNote, text: e.target.value })
-                }
-                required
-              />
-            </FormControl>
-            <Button type="submit" colorScheme="teal">
-              Add Note
-            </Button>
-            <Button onClick={toggleAdding} ml={4}>
-              Cancel
-            </Button>
-          </form>
-        </Box>
-      ) : null}
-
       {notes.map((note) => (
         <Box
           key={note.id}
@@ -96,7 +56,7 @@ const NoteList: React.FC<NoteListProps> = ({
         >
           <Flex justifyContent="space-between" alignItems="center">
             <Text fontSize="lg" fontWeight="semibold">
-              {truncateText(note.title, 20)}
+              {truncateText(note.title, 20) || "Untitled Note"}
             </Text>
             <IconButton
               aria-label="Delete note"
@@ -113,7 +73,7 @@ const NoteList: React.FC<NoteListProps> = ({
           </Flex>
           <Box maxWidth="330px" maxHeight="60px" overflow="hidden" p={2}>
             <Text fontSize="sm" mt={2} color={textBg}>
-              {truncateText(stripHtmlTags(note.text), 90)}
+              {truncateText(stripHtmlTags(note.text), 90) || "No content"}
             </Text>
           </Box>
         </Box>

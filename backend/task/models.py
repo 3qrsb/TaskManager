@@ -43,8 +43,8 @@ class Task(models.Model):
 
 
 class Note(models.Model):
-    title = models.CharField(max_length=255)
-    text = models.TextField()
+    title = models.CharField(max_length=255, blank=True, default="")
+    text = models.TextField(blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
