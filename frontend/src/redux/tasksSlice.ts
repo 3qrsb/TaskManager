@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../utils/api";
 
 export interface Task {
@@ -32,6 +32,10 @@ const initialState: TasksState = {
   error: null,
 };
 
+const getErrorMessage = (error: any): string => {
+  return error?.message || "An unknown error occurred.";
+};
+
 export const fetchTasks = createAsyncThunk(
   "tasks/fetchTasks",
   async ({
@@ -47,17 +51,22 @@ export const fetchTasks = createAsyncThunk(
     ordering?: string;
     search?: string;
   }) => {
-    let url = `/tasks/?page=${page}&page_size=${pageSize}`;
-    if (categoryId) {
-      url += `&category_id=${categoryId}`;
+    const params = new URLSearchParams();
+    params.append("page", page.toString());
+    params.append("page_size", pageSize.toString());
+    if (categoryId !== undefined && categoryId !== null) {
+      params.append("category_id", categoryId.toString());
     }
     if (ordering) {
-      url += `&ordering=${ordering}`;
+      params.append("ordering", ordering);
     }
     if (search) {
-      url += `&search=${search}`;
+      params.append("search", search);
     }
+
+    const url = `/tasks/?${params.toString()}`;
     const response = await api.get<TasksResponse>(url);
+
     return {
       tasks: response.results,
       totalPages: Math.ceil(response.count / pageSize),
@@ -103,39 +112,32 @@ const tasksSlice = createSlice({
         state.status = "loading";
         state.error = null;
       })
-      .addCase(
-        fetchTasks.fulfilled,
-        (
-          state,
-          action: PayloadAction<{
-            tasks: Task[];
-            totalPages: number;
-            totalCount: number;
-          }>
-        ) => {
-          state.status = "succeeded";
-          state.tasks = action.payload.tasks;
-          state.totalPages = action.payload.totalPages;
-          state.totalCount = action.payload.totalCount;
-        }
-      )
+      .addCase(fetchTasks.fulfilled, (state, action) => {
+        const { tasks, totalPages, totalCount } = action.payload;
+        state.status = "succeeded";
+        state.tasks = tasks;
+        state.totalPages = totalPages;
+        state.totalCount = totalCount;
+      })
       .addCase(fetchTasks.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message || "Failed to fetch tasks";
+        state.error = getErrorMessage(action.error);
       })
-      .addCase(createTask.fulfilled, (state, action: PayloadAction<Task>) => {
+      .addCase(createTask.fulfilled, (state, action) => {
         state.tasks.push(action.payload);
       })
-      .addCase(updateTask.fulfilled, (state, action: PayloadAction<Task>) => {
+      .addCase(updateTask.fulfilled, (state, action) => {
+        const updatedTask = action.payload;
         const index = state.tasks.findIndex(
-          (task) => task.id === action.payload.id
+          (task) => task.id === updatedTask.id
         );
         if (index !== -1) {
-          state.tasks[index] = action.payload;
+          state.tasks[index] = updatedTask;
         }
       })
-      .addCase(deleteTask.fulfilled, (state, action: PayloadAction<number>) => {
-        state.tasks = state.tasks.filter((task) => task.id !== action.payload);
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        const taskId = action.payload;
+        state.tasks = state.tasks.filter((task) => task.id !== taskId);
       });
   },
 });
