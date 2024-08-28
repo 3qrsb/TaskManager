@@ -50,7 +50,7 @@ class Task(models.Model):
         return self.title
     
     class Meta:
-        ordering = ['-stage', 'id']
+        ordering = ['-priority', '-stage', 'id']
 
 
 class Note(models.Model):
