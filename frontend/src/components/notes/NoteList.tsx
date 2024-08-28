@@ -30,11 +30,6 @@ const NoteList: React.FC<NoteListProps> = ({
   selectedNote,
   onSelectNote,
   onDeleteNote,
-  isAdding,
-  toggleAdding,
-  newNote,
-  onNewNoteChange,
-  onSubmitNewNote,
   noteBg,
   selectedNoteBg,
 }) => {

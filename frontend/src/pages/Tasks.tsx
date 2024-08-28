@@ -103,7 +103,7 @@ const Tasks = () => {
 
   const handleClearSearch = () => {
     setSearchTerm("");
-    handleSearch(""); // Clear search and fetch all tasks
+    handleSearch("");
   };
 
   const handlePageChange = (page: number) => {
@@ -258,9 +258,12 @@ const Tasks = () => {
             <CustomDropdown<string>
               label="Sort by"
               items={[
-                { id: "created_at", title: "Created At" },
-                { id: "completion_date", title: "Due Date" },
-                { id: "title", title: "Title" },
+                { id: "created_at", title: "New First" },
+                { id: "-created_at", title: "Old First" },
+                { id: "-stage", title: "In Progress" },
+                { id: "stage", title: "Completed" },
+                { id: "title", title: "Title (a-z)" },
+                { id: "-title", title: "Title (z-a)" },
               ]}
               selectedItem={sortBy}
               onChange={handleSortChange}
