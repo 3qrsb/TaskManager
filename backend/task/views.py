@@ -40,6 +40,16 @@ class TaskViewSet(ModelViewSet):
         elif self.request.method == 'PATCH':
             return UpdateStageSerializer
         return TaskSerializer
+    
+    def perform_create(self, serializer):
+        user = self.request.user
+        customer, created = Customer.objects.get_or_create(user=user)
+        serializer.save(customer=customer)
+
+    def perform_update(self, serializer):
+        user = self.request.user
+        customer = Customer.objects.get(user=user)
+        serializer.save(customer=customer)
 
 
 class CategoryViewSet(ModelViewSet):
