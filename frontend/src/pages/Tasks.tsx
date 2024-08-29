@@ -14,6 +14,7 @@ import {
   Stack,
   useColorModeValue,
   Badge,
+  Tooltip,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,6 +31,8 @@ import {
   getStageBadge,
   truncateText,
   getCategoryTitle,
+  getPriorityLabel,
+  getPriorityColorScheme,
 } from "../utils/taskUtils";
 import CustomDropdown from "../components/UI/CustomDropdown";
 import SearchBar from "../components/SearchBar";
@@ -294,7 +297,19 @@ const Tasks = () => {
                   onClick={() => handleRowClick(task)}
                   _hover={{ bg: hoverBg, cursor: "pointer" }}
                 >
-                  <Td>{truncateText(task.title, 20)}</Td>
+                  <Td>
+                    <Flex align="center">
+                      <Text>{truncateText(task.title, 20)}</Text>
+                      <Tooltip label="Task's Priority" openDelay={700}>
+                        <Badge
+                          ml={2}
+                          colorScheme={getPriorityColorScheme(task.priority)}
+                        >
+                          {getPriorityLabel(task.priority)}
+                        </Badge>
+                      </Tooltip>
+                    </Flex>
+                  </Td>
                   <Td>{truncateText(task.description, 30)}</Td>
                   <Td>{getCategoryTitle(categories, task.category)}</Td>
                   <Td>

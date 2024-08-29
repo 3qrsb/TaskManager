@@ -35,3 +35,35 @@ export const getCategoryTitle = (
   const category = categories.find((category) => category.id === categoryId);
   return category ? category.title : "-";
 };
+
+export const getPriorityLabel = (priority: string | number): string => {
+  switch (priority) {
+    case 1:
+    case "1":
+      return "H";
+    case 2:
+    case "2":
+      return "M";
+    case 3:
+    case "3":
+      return "L";
+    default:
+      return "";
+  }
+};
+
+export const getPriorityColorScheme = (priority: string | number): string => {
+  switch (priority) {
+    case 1:
+    case "1":
+      return "red";
+    case 2:
+    case "2":
+      return "yellow";
+    case 3:
+    case "3":
+      return "green";
+    default:
+      return "gray";
+  }
+};

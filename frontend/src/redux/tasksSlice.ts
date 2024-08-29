@@ -9,6 +9,7 @@ export interface Task {
   category: number | null;
   created_at: string;
   completion_date: string;
+  priority: string;
 }
 
 interface TasksResponse {

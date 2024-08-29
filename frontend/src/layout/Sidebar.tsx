@@ -32,7 +32,7 @@ const Sidebar = () => {
   const sections = [
     { icon: MdOutlineDashboard, label: "Dashboard", path: "/dashboard" },
     { icon: MdAddTask, label: "Tasks", path: "/tasks" },
-    { icon: MdOutlineNoteAdd, label: "Note", path: "/note" },
+    { icon: MdOutlineNoteAdd, label: "Notes", path: "/note" },
     { icon: MdOutlineCalendarMonth, label: "Calendar", path: "/calendar" },
     { icon: FaRegTrashAlt, label: "Trash", path: "/trash" },
   ];
