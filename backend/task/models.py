@@ -6,6 +6,9 @@ class Customer(models.Model):
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f'{self.user.username}'
     
 
 class Category(models.Model):
@@ -58,6 +61,9 @@ class Note(models.Model):
     title = models.CharField(max_length=255, blank=True, default="")
     text = models.TextField(blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.title
 
     class Meta:
         ordering = ['-created_at']
