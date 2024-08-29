@@ -40,10 +40,11 @@ class Task(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     stage = models.CharField(max_length=20, choices=STAGE_CHOICES, default=IN_PROGRESS)
-    priority = models.IntegerField(choices=PRIORITY_CHOICES, default=MEDIUM)
+    #why default is medium? task can also be without a priority
+    priority = models.IntegerField(choices=PRIORITY_CHOICES, null=True, blank=True)
     category = models.ForeignKey(Category, null=True, on_delete=models.PROTECT, related_name='tasks')
     created_at = models.DateTimeField(auto_now_add=True)
-    completion_date = models.DateField(default='2024-07-31')
+    completion_date = models.DateField(null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
     def __str__(self) -> str:

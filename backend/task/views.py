@@ -13,7 +13,7 @@ from .serializers import TaskSerializer, AddTaskSerializer, UpdateStageSerialize
 class TaskViewSet(ModelViewSet):
     pagination_class = CustomPageNumberPagination
     filter_backends = [OrderingFilter, SearchFilter]
-    ordering_fields = ['stage', 'created_at', 'title']
+    ordering_fields = ['stage', 'created_at', 'title', 'priority']
     search_fields = ['title', 'description']
     permission_classes = [IsAuthenticated]
 
