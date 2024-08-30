@@ -39,7 +39,7 @@ class Task(models.Model):
     category = models.ForeignKey(Category, null=True, on_delete=models.PROTECT, related_name='tasks')
     created_at = models.DateTimeField(auto_now_add=True)
     completion_date = models.DateField(null=True, blank=True)
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='tasks')
 
     def __str__(self) -> str:
         return self.title
