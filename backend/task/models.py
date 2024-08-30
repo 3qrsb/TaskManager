@@ -38,7 +38,7 @@ class Task(models.Model):
     priority = models.IntegerField(choices=Priority.choices, null=True, blank=True)
     category = models.ForeignKey(Category, null=True, on_delete=models.PROTECT, related_name='tasks')
     created_at = models.DateTimeField(auto_now_add=True)
-    completion_date = models.DateField(default=timezone.localtime(timezone.now()).date())
+    completion_date = models.DateField(null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
     def __str__(self) -> str:
