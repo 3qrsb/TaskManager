@@ -261,8 +261,8 @@ const Tasks = () => {
             <CustomDropdown<string>
               label="Sort by"
               items={[
-                { id: "created_at", title: "New First" },
-                { id: "-created_at", title: "Old First" },
+                { id: "created_at", title: "Old First" },
+                { id: "-created_at", title: "New First" },
                 { id: "-stage", title: "In Progress" },
                 { id: "stage", title: "Completed" },
                 { id: "title", title: "Title (a-z)" },
@@ -304,6 +304,7 @@ const Tasks = () => {
                         <Badge
                           ml={2}
                           colorScheme={getPriorityColorScheme(task.priority)}
+                          fontSize="x-small"
                         >
                           {getPriorityLabel(task.priority)}
                         </Badge>

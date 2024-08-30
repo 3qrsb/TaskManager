@@ -40,13 +40,13 @@ export const getPriorityLabel = (priority: string | number): string => {
   switch (priority) {
     case 1:
     case "1":
-      return "H";
+      return "L";
     case 2:
     case "2":
       return "M";
     case 3:
     case "3":
-      return "L";
+      return "H";
     default:
       return "";
   }
@@ -56,13 +56,13 @@ export const getPriorityColorScheme = (priority: string | number): string => {
   switch (priority) {
     case 1:
     case "1":
-      return "red";
+      return "green";
     case 2:
     case "2":
       return "yellow";
     case 3:
     case "3":
-      return "green";
+      return "red";
     default:
       return "gray";
   }
