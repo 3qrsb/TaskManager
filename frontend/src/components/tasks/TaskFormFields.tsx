@@ -1,6 +1,15 @@
 import React from "react";
-import { Input, Textarea, Select, Grid, GridItem } from "@chakra-ui/react";
+import {
+  Input,
+  Textarea,
+  Select,
+  Grid,
+  GridItem,
+  Tag,
+  HStack,
+} from "@chakra-ui/react";
 import { Task } from "../../redux/tasksSlice";
+import { getPriorityColorScheme } from "../../utils/taskUtils";
 
 interface TaskFormFieldsProps {
   taskData: Partial<Task>;
@@ -72,6 +81,35 @@ const TaskFormFields: React.FC<TaskFormFieldsProps> = ({
         }
         onChange={(e) => handleInputChange("completion_date", e.target.value)}
       />
+    </GridItem>
+
+    <GridItem>Priority:</GridItem>
+    <GridItem>
+      <HStack spacing={4}>
+        {[
+          { label: "Low", value: 1 },
+          { label: "Medium", value: 2 },
+          { label: "High", value: 3 },
+        ].map((priority) => (
+          <Tag
+            key={priority.value}
+            onClick={() => {
+              if (Number(taskData.priority) === priority.value) {
+                handleInputChange("priority", null);
+              } else {
+                handleInputChange("priority", priority.value);
+              }
+            }}
+            colorScheme={getPriorityColorScheme(priority.value)}
+            variant={
+              Number(taskData.priority) === priority.value ? "solid" : "outline"
+            }
+            cursor="pointer"
+          >
+            {priority.label}
+          </Tag>
+        ))}
+      </HStack>
     </GridItem>
   </Grid>
 );
