@@ -7,6 +7,7 @@ import {
   GridItem,
   Tag,
   HStack,
+  Switch,
 } from "@chakra-ui/react";
 import { Task } from "../../redux/tasksSlice";
 import { getPriorityColorScheme } from "../../utils/taskUtils";
@@ -110,6 +111,14 @@ const TaskFormFields: React.FC<TaskFormFieldsProps> = ({
           </Tag>
         ))}
       </HStack>
+    </GridItem>
+
+    <GridItem>Flag</GridItem>
+    <GridItem>
+      <Switch
+        isChecked={taskData.isFlagged}
+        onChange={(e) => handleInputChange("isFlagged", e.target.checked)}
+      />
     </GridItem>
   </Grid>
 );

@@ -10,6 +10,7 @@ export interface Task {
   created_at: string;
   completion_date: string;
   priority: string;
+  isFlagged: boolean;
 }
 
 interface TasksResponse {

@@ -17,6 +17,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
+import { PiFlagPennantFill } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
 import { fetchTasks, Task } from "../redux/tasksSlice";
@@ -300,15 +301,24 @@ const Tasks = () => {
                   <Td>
                     <Flex align="center">
                       <Text>{truncateText(task.title, 20)}</Text>
-                      <Tooltip label="Task's Priority" openDelay={700}>
-                        <Badge
-                          ml={2}
-                          colorScheme={getPriorityColorScheme(task.priority)}
-                          fontSize="x-small"
-                        >
-                          {getPriorityLabel(task.priority)}
-                        </Badge>
-                      </Tooltip>
+                      {task.priority && (
+                        <Tooltip label="Task's Priority" openDelay={700}>
+                          <Badge
+                            ml={2}
+                            colorScheme={getPriorityColorScheme(task.priority)}
+                            fontSize="x-small"
+                          >
+                            {getPriorityLabel(task.priority)}
+                          </Badge>
+                        </Tooltip>
+                      )}
+                      {task.isFlagged && (
+                        <PiFlagPennantFill
+                          color="red"
+                          size={15}
+                          style={{ marginLeft: "8px" }}
+                        />
+                      )}
                     </Flex>
                   </Td>
                   <Td>{truncateText(task.description, 30)}</Td>
