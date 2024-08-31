@@ -40,6 +40,7 @@ class Task(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     completion_date = models.DateField(null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='tasks')
+    isFlagged = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.title
