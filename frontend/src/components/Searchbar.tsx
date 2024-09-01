@@ -22,12 +22,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
   }, [searchTerm]);
 
   const handleSearch = () => {
-    onSearch(localSearchTerm);
+    if (localSearchTerm.trim()) {
+      onSearch(localSearchTerm);
+    }
   };
 
   const handleClear = () => {
+    if (localSearchTerm.trim()) {
+      onClearSearch();
+    }
     setLocalSearchTerm("");
-    onClearSearch();
   };
 
   return (
