@@ -17,7 +17,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { PiFlagPennantFill } from "react-icons/pi";
+import { HiFlag } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
 import { fetchTasks, Task } from "../redux/tasksSlice";
@@ -313,7 +313,7 @@ const Tasks = () => {
                         </Tooltip>
                       )}
                       {task.isFlagged && (
-                        <PiFlagPennantFill
+                        <HiFlag
                           color="red"
                           size={15}
                           style={{ marginLeft: "8px" }}

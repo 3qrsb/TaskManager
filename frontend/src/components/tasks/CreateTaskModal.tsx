@@ -3,7 +3,6 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalFooter,
   ModalBody,
   Button,
@@ -98,7 +97,6 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Create New Task</ModalHeader>
         <ModalBody>
           <TaskFormFields
             taskData={newTask}
