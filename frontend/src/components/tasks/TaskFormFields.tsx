@@ -2,7 +2,6 @@ import React from "react";
 import {
   Input,
   Textarea,
-  Select,
   Grid,
   GridItem,
   HStack,
@@ -18,6 +17,7 @@ import { HiFlag } from "react-icons/hi";
 import { CiShoppingTag, CiEdit, CiWarning } from "react-icons/ci";
 import { Task } from "../../redux/tasksSlice";
 import { getPriorityColorScheme } from "../../utils/taskUtils";
+import CustomDropdown from "../UI/CustomDropdown";
 
 interface TaskFormFieldsProps {
   taskData: Partial<Task>;
@@ -35,7 +35,7 @@ const TaskFormFields: React.FC<TaskFormFieldsProps> = ({
   <Grid templateColumns={{ base: "1fr", md: "150px 1fr" }} gap={4}>
     <GridItem colSpan={2} mt={4} mb={2}>
       <Input
-        placeholder="Title"
+        placeholder="Where is ur title?"
         value={taskData.title || ""}
         onChange={(e) => handleInputChange("title", e.target.value)}
       />
@@ -51,6 +51,7 @@ const TaskFormFields: React.FC<TaskFormFieldsProps> = ({
     </GridItem>
     <GridItem>
       <Textarea
+        placeholder="Compose an epic..."
         value={taskData.description || ""}
         onChange={(e) => handleInputChange("description", e.target.value)}
         resize="none"
@@ -66,14 +67,14 @@ const TaskFormFields: React.FC<TaskFormFieldsProps> = ({
           <Box as="label">Stage</Box>
         </GridItem>
         <GridItem>
-          <Select
-            value={taskData.stage || ""}
-            onChange={(e) => handleInputChange("stage", e.target.value)}
-            isDisabled={!isEditMode}
-          >
-            <option value="in_progress">In Progress</option>
-            <option value="completed">Completed</option>
-          </Select>
+          <CustomDropdown
+            items={[
+              { id: "in_progress", title: "In Progress" },
+              { id: "completed", title: "Completed" },
+            ]}
+            selectedItem={taskData.stage || null}
+            onChange={(id) => handleInputChange("stage", id)}
+          />
         </GridItem>
       </>
     )}
@@ -83,23 +84,12 @@ const TaskFormFields: React.FC<TaskFormFieldsProps> = ({
       <Box as="label">Category</Box>
     </GridItem>
     <GridItem>
-      <Select
-        value={taskData.category || ""}
-        onChange={(e) =>
-          handleInputChange(
-            "category",
-            e.target.value === "none" ? null : e.target.value
-          )
-        }
-      >
-        <option value="none">Select a category</option>
-
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.title}
-          </option>
-        ))}
-      </Select>
+      <CustomDropdown
+        items={categories}
+        selectedItem={taskData.category || null}
+        onChange={(id) => handleInputChange("category", id)}
+        allowUnselect={true}
+      />
     </GridItem>
 
     <GridItem display="flex" alignItems="center">

@@ -3,12 +3,13 @@ import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 interface CustomDropdownProps<T> {
-  label: string;
+  label?: string;
   items: { id: T; title: string }[];
   selectedItem: T | null;
   onChange: (id: T | null) => void;
   maxWidth?: string;
   size?: string;
+  allowUnselect?: boolean;
 }
 
 const CustomDropdown = <T extends number | string>({
@@ -18,7 +19,16 @@ const CustomDropdown = <T extends number | string>({
   onChange,
   maxWidth = "200px",
   size = "sm",
+  allowUnselect = false,
 }: CustomDropdownProps<T>) => {
+  const handleItemClick = (id: T) => {
+    if (allowUnselect && selectedItem === id) {
+      onChange(null); // unselecting if the same item is clicked
+    } else {
+      onChange(id);
+    }
+  };
+
   return (
     <Menu>
       <MenuButton
@@ -32,14 +42,14 @@ const CustomDropdown = <T extends number | string>({
         size={size}
         maxWidth={maxWidth}
       >
-        {label}:{" "}
+        {label ? `${label}: ` : ""}
         {selectedItem !== null
           ? items.find((item) => item.id === selectedItem)?.title
           : "All"}
       </MenuButton>
       <MenuList>
         {items.map((item) => (
-          <MenuItem key={item.id} onClick={() => onChange(item.id)}>
+          <MenuItem key={item.id} onClick={() => handleItemClick(item.id)}>
             {item.title}
           </MenuItem>
         ))}
