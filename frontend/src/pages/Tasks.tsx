@@ -77,32 +77,26 @@ const Tasks = () => {
     }
   }, [categories.length, dispatch]);
 
+  const fetchAndSetTasks = (options = {}) => {
+    const {
+      page = 1,
+      pageSize = 15,
+      search = "",
+      categoryId = null,
+      ordering = "created_at",
+    }: any = options;
+    dispatch(fetchTasks({ page, pageSize, search, categoryId, ordering })).then(
+      (response: any) => setDisplayedTasks(response.payload.tasks || [])
+    );
+  };
+
   const handleSearch = (query: string) => {
     setSearchTerm(query);
-    if (query) {
-      dispatch(
-        fetchTasks({
-          page: 1,
-          pageSize,
-          search: query,
-          categoryId: selectedCategory,
-          ordering: sortBy,
-        })
-      ).then((response: any) => {
-        setDisplayedTasks(response.payload.tasks || []);
-      });
-    } else {
-      dispatch(
-        fetchTasks({
-          page: 1,
-          pageSize,
-          categoryId: selectedCategory,
-          ordering: sortBy,
-        })
-      ).then((response: any) => {
-        setDisplayedTasks(response.payload.tasks || []);
-      });
-    }
+    fetchAndSetTasks({
+      search: query,
+      categoryId: selectedCategory,
+      ordering: sortBy,
+    });
   };
 
   const handleClearSearch = () => {
@@ -112,16 +106,7 @@ const Tasks = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    dispatch(
-      fetchTasks({
-        page,
-        pageSize,
-        categoryId: selectedCategory,
-        ordering: sortBy,
-      })
-    ).then((response: any) => {
-      setDisplayedTasks(response.payload.tasks || []);
-    });
+    fetchAndSetTasks({ page, categoryId: selectedCategory, ordering: sortBy });
   };
 
   const handleRowClick = (task: Task) => {
