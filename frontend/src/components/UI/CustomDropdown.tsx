@@ -1,6 +1,13 @@
 import React from "react";
-import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import {
+  Button,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
 interface CustomDropdownProps<T> {
   label?: string;
@@ -29,31 +36,46 @@ const CustomDropdown = <T extends number | string>({
     }
   };
 
+  const hoverBg = useColorModeValue("teal.100", "teal.400");
+  const colorBg = useColorModeValue("teal.200", "teal.600");
+
   return (
     <Menu>
-      <MenuButton
-        as={Button}
-        rightIcon={<ChevronDownIcon />}
-        variant="outline"
-        borderRadius="md"
-        boxShadow="sm"
-        _hover={{ boxShadow: "md" }}
-        _focus={{ boxShadow: "md", borderColor: "teal.500" }}
-        size={size}
-        maxWidth={maxWidth}
-      >
-        {label ? `${label}: ` : ""}
-        {selectedItem !== null
-          ? items.find((item) => item.id === selectedItem)?.title
-          : "All"}
-      </MenuButton>
-      <MenuList>
-        {items.map((item) => (
-          <MenuItem key={item.id} onClick={() => handleItemClick(item.id)}>
-            {item.title}
-          </MenuItem>
-        ))}
-      </MenuList>
+      {({ isOpen }) => (
+        <>
+          <MenuButton
+            as={Button}
+            rightIcon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+            variant="outline"
+            borderRadius="md"
+            boxShadow="sm"
+            _hover={{ boxShadow: "md", borderColor: "teal.500" }}
+            size={size}
+            maxWidth={maxWidth}
+            padding="15px"
+          >
+            {label ? `${label}: ` : ""}
+            {selectedItem !== null
+              ? items.find((item) => item.id === selectedItem)?.title
+              : "All"}
+          </MenuButton>
+          <MenuList boxShadow="md" p={2}>
+            {items.map((item, index) => (
+              <MenuItem
+                key={item.id}
+                onClick={() => handleItemClick(item.id)}
+                _hover={{ bg: hoverBg }}
+                bg={selectedItem === item.id ? colorBg : ""}
+                borderRadius="md"
+                transition="background-color 0.2s"
+                mb={index !== items.length - 1 ? 1 : 0}
+              >
+                {item.title}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </>
+      )}
     </Menu>
   );
 };
