@@ -13,7 +13,7 @@ import ColorModeSwitch from "../components/ColorModeSwitch";
 
 const Header = () => {
   const headerBg = useColorModeValue("white", "gray.900");
-  const buttonHoverBg = useColorModeValue("blue.200", "blue.700");
+  const buttonHoverBg = useColorModeValue("teal.300", "teal.200");
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -25,14 +25,14 @@ const Header = () => {
           boxSize={{ base: "35px", md: "45px" }}
         />
 
-        <Flex display={{ base: "none", md: "flex" }} align="center" gap={4}>
-          <Button variant="ghost" _hover={{ bg: buttonHoverBg }}>
+        <Flex display={{ base: "none", md: "flex" }} align="center" gap={10}>
+          <Button variant="link" _hover={{ color: buttonHoverBg }}>
             Home
           </Button>
-          <Button variant="ghost" _hover={{ bg: buttonHoverBg }}>
+          <Button variant="link" _hover={{ color: buttonHoverBg }}>
             Profile
           </Button>
-          <Button variant="ghost" _hover={{ bg: buttonHoverBg }}>
+          <Button variant="link" _hover={{ color: buttonHoverBg }}>
             Settings
           </Button>
           <ColorModeSwitch />
@@ -43,7 +43,8 @@ const Header = () => {
             aria-label="Toggle Navigation"
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             onClick={onToggle}
-            variant="ghost"
+            variant="link"
+            _hover={{ color: buttonHoverBg }}
           />
         </Flex>
       </Flex>
@@ -51,22 +52,22 @@ const Header = () => {
       <Collapse in={isOpen} animateOpacity>
         <Flex direction="column" align="center" mt={4} gap={2}>
           <Button
-            variant="ghost"
-            _hover={{ bg: buttonHoverBg }}
+            variant="link"
+            _hover={{ color: buttonHoverBg }}
             onClick={onToggle}
           >
             Home
           </Button>
           <Button
-            variant="ghost"
-            _hover={{ bg: buttonHoverBg }}
+            variant="link"
+            _hover={{ color: buttonHoverBg }}
             onClick={onToggle}
           >
             Profile
           </Button>
           <Button
-            variant="ghost"
-            _hover={{ bg: buttonHoverBg }}
+            variant="link"
+            _hover={{ color: buttonHoverBg }}
             onClick={onToggle}
           >
             Settings

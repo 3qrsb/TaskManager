@@ -38,6 +38,8 @@ const TaskFormFields: React.FC<TaskFormFieldsProps> = ({
         placeholder="Where is ur title?"
         value={taskData.title || ""}
         onChange={(e) => handleInputChange("title", e.target.value)}
+        _hover={{ boxShadow: "md", borderColor: "teal.500" }}
+        _focus={{ boxShadow: "md", borderColor: "teal.500" }}
       />
     </GridItem>
 
@@ -57,6 +59,8 @@ const TaskFormFields: React.FC<TaskFormFieldsProps> = ({
         resize="none"
         height="85px"
         overflowY="auto"
+        _hover={{ boxShadow: "md", borderColor: "teal.500" }}
+        _focus={{ boxShadow: "md", borderColor: "teal.500" }}
       />
     </GridItem>
 
@@ -105,6 +109,8 @@ const TaskFormFields: React.FC<TaskFormFieldsProps> = ({
             : ""
         }
         onChange={(e) => handleInputChange("completion_date", e.target.value)}
+        _hover={{ boxShadow: "md", borderColor: "teal.500" }}
+        _focus={{ boxShadow: "md", borderColor: "teal.500" }}
       />
     </GridItem>
 

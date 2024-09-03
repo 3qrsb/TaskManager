@@ -47,6 +47,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
             handleSearch();
           }
         }}
+        _hover={{ boxShadow: "md", borderColor: "teal.500" }}
+        _focus={{ boxShadow: "md", borderColor: "teal.500" }}
       />
       <InputRightElement width="4.5rem">
         {localSearchTerm ? (

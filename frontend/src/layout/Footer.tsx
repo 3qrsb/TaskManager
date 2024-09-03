@@ -11,7 +11,7 @@ import { FaGithub, FaInstagram, FaTelegramPlane } from "react-icons/fa";
 const Footer = () => {
   const footerBg = useColorModeValue("white", "gray.900");
   const textColor = useColorModeValue("text.light", "text.dark");
-  const iconHoverBg = useColorModeValue("blue.200", "blue.700");
+  const iconHoverBg = useColorModeValue("teal.200", "teal.200");
 
   return (
     <Box as="footer" bg={footerBg} p={4} color={textColor} textAlign="center">
@@ -37,8 +37,8 @@ const Footer = () => {
             <IconButton
               icon={<FaGithub />}
               aria-label="GitHub"
-              variant="ghost"
-              _hover={{ bg: iconHoverBg }}
+              variant="link"
+              _hover={{ color: iconHoverBg }}
               size={{ base: "sm", md: "md" }}
             />
           </Link>
@@ -46,8 +46,8 @@ const Footer = () => {
             <IconButton
               icon={<FaInstagram />}
               aria-label="Instagram"
-              variant="ghost"
-              _hover={{ bg: iconHoverBg }}
+              variant="link"
+              _hover={{ color: iconHoverBg }}
               size={{ base: "sm", md: "md" }}
             />
           </Link>
@@ -55,8 +55,8 @@ const Footer = () => {
             <IconButton
               icon={<FaTelegramPlane />}
               aria-label="Telegram"
-              variant="ghost"
-              _hover={{ bg: iconHoverBg }}
+              variant="link"
+              _hover={{ color: iconHoverBg }}
               size={{ base: "sm", md: "md" }}
             />
           </Link>

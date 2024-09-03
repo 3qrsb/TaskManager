@@ -65,8 +65,8 @@ const Sidebar = () => {
             icon={isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
             aria-label="Toggle Sidebar"
             onClick={handleToggle}
-            variant="ghost"
-            _hover={{ bg: useColorModeValue("gray.300", "gray.600") }}
+            variant="link"
+            _hover={{ color: useColorModeValue("gray.300", "gray.600") }}
           />
         </Tooltip>
       </Flex>
