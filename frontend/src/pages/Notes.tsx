@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Flex, Box, Text, useColorModeValue } from "@chakra-ui/react";
+import { Flex, Box, useColorModeValue } from "@chakra-ui/react";
 import {
   fetchNotes,
   addNote,
@@ -13,6 +13,7 @@ import NotesSkeleton from "../components/UI/NotesSkeleton";
 import NoteList from "../components/notes/NoteList";
 import NoteEditor from "../components/notes/NoteEditor";
 import NoteControlBar from "../components/notes/NoteControlBar";
+import ErrorMessage from "../components/UI/ErrorMessage";
 
 const Notes = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -35,8 +36,10 @@ const Notes = () => {
   const selectedNoteBg = useColorModeValue("blue.100", "blue.900");
 
   useEffect(() => {
-    dispatch(fetchNotes({ searchTerm, sortOrder }));
-  }, [dispatch, searchTerm, sortOrder]);
+    if (!error) {
+      dispatch(fetchNotes({ searchTerm, sortOrder }));
+    }
+  }, [dispatch, searchTerm, sortOrder, error]);
 
   const handleSearch = (query: string) => {
     setSearchTerm(query);
@@ -89,7 +92,6 @@ const Notes = () => {
   };
 
   if (status === "loading") return <NotesSkeleton />;
-  if (error) return <Text>Error loading notes: {error}</Text>;
 
   return (
     <Flex direction="row" height="100%">
@@ -109,26 +111,32 @@ const Notes = () => {
           sortOrder={sortOrder}
           toggleAdding={toggleAdding}
         />
-        <NoteList
-          notes={notes}
-          selectedNote={selectedNote}
-          onSelectNote={setSelectedNote}
-          onDeleteNote={handleDelete}
-          noteBg={noteCardBg}
-          selectedNoteBg={selectedNoteBg}
-          isAdding={isAdding}
-          toggleAdding={toggleAdding}
-          newNote={newNote}
-          onNewNoteChange={handleNewNoteChange}
-          onSubmitNewNote={handleSubmitNewNote}
-        />
+        {error ? (
+          <ErrorMessage description={error} />
+        ) : (
+          <NoteList
+            notes={notes}
+            selectedNote={selectedNote}
+            onSelectNote={setSelectedNote}
+            onDeleteNote={handleDelete}
+            noteBg={noteCardBg}
+            selectedNoteBg={selectedNoteBg}
+            isAdding={isAdding}
+            toggleAdding={toggleAdding}
+            newNote={newNote}
+            onNewNoteChange={handleNewNoteChange}
+            onSubmitNewNote={handleSubmitNewNote}
+          />
+        )}
       </Box>
-      <NoteEditor
-        selectedNote={selectedNote}
-        onChange={handleNoteChange}
-        onBlur={handleBlur}
-        noteBg={noteEditorBg}
-      />
+      {!error && (
+        <NoteEditor
+          selectedNote={selectedNote}
+          onChange={handleNoteChange}
+          onBlur={handleBlur}
+          noteBg={noteEditorBg}
+        />
+      )}
     </Flex>
   );
 };
