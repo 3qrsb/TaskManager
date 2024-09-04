@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Flex, Box, useColorModeValue } from "@chakra-ui/react";
+import { Flex, Box, useColorModeValue, Center } from "@chakra-ui/react";
 import {
   fetchNotes,
   addNote,
@@ -96,37 +96,51 @@ const Notes = () => {
   return (
     <Flex direction="row" height="100%">
       <Box
-        width="35%"
+        width={error ? "100%" : "35%"}
         p={4}
         borderRadius="lg"
         bg={noteListBg}
         maxH="calc(100vh - 30px)"
-        overflowY="auto"
+        overflowY={error ? "hidden" : "auto"}
       >
-        <NoteControlBar
-          onSearch={handleSearch}
-          onClearSearch={handleClearSearch}
-          searchTerm={searchTerm}
-          onSortChange={handleSortChange}
-          sortOrder={sortOrder}
-          toggleAdding={toggleAdding}
-        />
         {error ? (
-          <ErrorMessage description={error} />
+          <Center>
+            <Box width="50%">
+              <NoteControlBar
+                onSearch={handleSearch}
+                onClearSearch={handleClearSearch}
+                searchTerm={searchTerm}
+                onSortChange={handleSortChange}
+                sortOrder={sortOrder}
+                toggleAdding={toggleAdding}
+              />
+            </Box>
+            <ErrorMessage description={error} />
+          </Center>
         ) : (
-          <NoteList
-            notes={notes}
-            selectedNote={selectedNote}
-            onSelectNote={setSelectedNote}
-            onDeleteNote={handleDelete}
-            noteBg={noteCardBg}
-            selectedNoteBg={selectedNoteBg}
-            isAdding={isAdding}
-            toggleAdding={toggleAdding}
-            newNote={newNote}
-            onNewNoteChange={handleNewNoteChange}
-            onSubmitNewNote={handleSubmitNewNote}
-          />
+          <>
+            <NoteControlBar
+              onSearch={handleSearch}
+              onClearSearch={handleClearSearch}
+              searchTerm={searchTerm}
+              onSortChange={handleSortChange}
+              sortOrder={sortOrder}
+              toggleAdding={toggleAdding}
+            />
+            <NoteList
+              notes={notes}
+              selectedNote={selectedNote}
+              onSelectNote={setSelectedNote}
+              onDeleteNote={handleDelete}
+              noteBg={noteCardBg}
+              selectedNoteBg={selectedNoteBg}
+              isAdding={isAdding}
+              toggleAdding={toggleAdding}
+              newNote={newNote}
+              onNewNoteChange={handleNewNoteChange}
+              onSubmitNewNote={handleSubmitNewNote}
+            />
+          </>
         )}
       </Box>
       {!error && (
