@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  Heading,
   Table,
   Thead,
   Tbody,
@@ -10,13 +9,10 @@ import {
   Td,
   Text,
   Flex,
-  Button,
-  Stack,
   useColorModeValue,
   Badge,
   Tooltip,
 } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
 import { HiFlag } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
@@ -35,8 +31,7 @@ import {
   getPriorityLabel,
   getPriorityColorScheme,
 } from "../utils/taskUtils";
-import CustomDropdown from "../components/UI/CustomDropdown";
-import SearchBar from "../components/SearchBar";
+import TaskControlBar from "../components/tasks/TaskControlBar";
 
 const Tasks = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -198,73 +193,23 @@ const Tasks = () => {
   };
 
   return (
-    <Flex direction="column" minH="100vh" p={4}>
-      <Box mb={4}>
-        <Flex justifyContent="space-between" alignItems="center" mb={4}>
-          <Heading as="h2" size="lg">
-            Tasks
-          </Heading>
-          <Box width="50%">
-            <SearchBar
-              onSearch={handleSearch}
-              onClearSearch={handleClearSearch}
-              searchTerm={searchTerm}
-              placeholder="Search for tasks..."
-            />
-          </Box>
-          <Button
-            leftIcon={<AddIcon />}
-            colorScheme="teal"
-            onClick={() => setIsCreateTaskModalOpen(true)}
-          >
-            Create Task
-          </Button>
-        </Flex>
-        <Flex justifyContent="space-between" alignItems="center" mb={4}>
-          <Text color="gray.500">
-            {searchTerm ? (
-              <>
-                <Badge colorScheme="teal" mr={2}>
-                  {totalCount} {totalCount === 1 ? "task" : "tasks"}
-                </Badge>
-                found based on your search
-              </>
-            ) : (
-              <>
-                <Badge colorScheme="teal">
-                  {totalCount} {totalCount === 1 ? "task" : "tasks"}
-                </Badge>
-              </>
-            )}
-          </Text>
-          <Stack direction="row" spacing={4} align="center">
-            <CustomDropdown<number>
-              label="Category"
-              items={[{ id: -1, title: "All" }, ...categories]}
-              selectedItem={selectedCategory}
-              onChange={(id) => handleCategoryChange(id !== -1 ? id : null)}
-            />
-            <CustomDropdown<string>
-              label="Sort by"
-              items={[
-                { id: "created_at", title: "Old First" },
-                { id: "-created_at", title: "New First" },
-                { id: "-stage", title: "In Progress" },
-                { id: "stage", title: "Completed" },
-                { id: "title", title: "Title (a-z)" },
-                { id: "-title", title: "Title (z-a)" },
-              ]}
-              selectedItem={sortBy}
-              onChange={handleSortChange}
-            />
-          </Stack>
-        </Flex>
-        {status === "loading" && <Loader />}
-        {status === "failed" && <ErrorMessage description={error} />}
-        {status === "succeeded" && displayedTasks.length === 0 && (
-          <Text>No tasks available.</Text>
-        )}
-        {status === "succeeded" && displayedTasks.length > 0 && (
+    <Box p={4}>
+      <TaskControlBar
+        totalCount={totalCount}
+        searchTerm={searchTerm}
+        categories={categories}
+        selectedCategory={selectedCategory}
+        sortBy={sortBy}
+        onSearch={handleSearch}
+        onClearSearch={handleClearSearch}
+        onCategoryChange={handleCategoryChange}
+        onSortChange={handleSortChange}
+        onCreateTask={() => setIsCreateTaskModalOpen(true)}
+      />
+      {status === "loading" && <Loader />}
+      {status === "failed" && <ErrorMessage description={error} />}
+      {status === "succeeded" && (
+        <Box overflowX="auto">
           <Table variant="simple" mt={4} size="sm">
             <Thead>
               <Tr>
@@ -320,17 +265,13 @@ const Tasks = () => {
               ))}
             </Tbody>
           </Table>
-        )}
-      </Box>
-      {totalPages > 1 && (
-        <Box mt="auto">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
         </Box>
       )}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
       <CreateTaskModal
         isOpen={isCreateTaskModalOpen}
         onClose={handleCloseCreateTaskModal}
@@ -343,7 +284,7 @@ const Tasks = () => {
         onSave={handleSave}
         onDelete={handleDelete}
       />
-    </Flex>
+    </Box>
   );
 };
 
