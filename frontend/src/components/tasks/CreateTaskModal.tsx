@@ -5,7 +5,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalBody,
-  Button,
 } from "@chakra-ui/react";
 import { Task } from "../../redux/tasksSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +13,7 @@ import { createTask } from "../../redux/tasksSlice";
 import { fetchCategories } from "../../redux/categoriesSlice";
 import TaskFormFields from "./TaskFormFields";
 import useTaskToast from "../../hooks/useTaskToast";
+import Button from "../UI/Button";
 
 interface CreateTaskModalProps {
   isOpen: boolean;
@@ -107,12 +107,14 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
         </ModalBody>
 
         <ModalFooter>
-          <Button variant="outline" onClick={onClose} colorScheme="gray" mr={3}>
-            Cancel
-          </Button>
-          <Button colorScheme="blue" onClick={handleCreate}>
-            Create
-          </Button>
+          <Button
+            text="Cancel"
+            onClick={onClose}
+            variant="outline"
+            colorScheme="gray"
+            mr={3}
+          />
+          <Button onClick={handleCreate} text="Create" />
         </ModalFooter>
       </ModalContent>
     </Modal>

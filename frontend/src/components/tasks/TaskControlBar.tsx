@@ -1,16 +1,9 @@
 import React from "react";
-import {
-  Box,
-  Heading,
-  Flex,
-  Button,
-  Text,
-  Badge,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, Heading, Flex, Text, Badge, Stack } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import CustomDropdown from "../UI/CustomDropdown";
 import SearchBar from "../SearchBar";
+import Button from "../UI/Button";
 
 interface TaskControlBarProps {
   totalCount: number;
@@ -51,13 +44,7 @@ const TaskControlBar: React.FC<TaskControlBarProps> = ({
             placeholder="Search for tasks..."
           />
         </Box>
-        <Button
-          leftIcon={<AddIcon />}
-          colorScheme="teal"
-          onClick={onCreateTask}
-        >
-          Create Task
-        </Button>
+        <Button text="Add Task" onClick={onCreateTask} icon={<AddIcon />} />
       </Flex>
       <Flex justifyContent="space-between" alignItems="center" mb={4}>
         <Text color="gray.500">

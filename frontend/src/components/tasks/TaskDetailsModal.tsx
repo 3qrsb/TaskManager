@@ -5,7 +5,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalBody,
-  Button,
   IconButton,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
@@ -16,6 +15,7 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { fetchCategories } from "../../redux/categoriesSlice";
 import TaskFormFields from "./TaskFormFields";
 import useTaskToast from "../../hooks/useTaskToast";
+import Button from "../UI/Button";
 
 interface TaskDetailsModalProps {
   isOpen: boolean;
@@ -132,12 +132,14 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({
             onClick={handleDelete}
             mr="auto"
           />
-          <Button variant="outline" onClick={onClose} colorScheme="gray" mr={3}>
-            Cancel
-          </Button>
-          <Button colorScheme="blue" onClick={handleSave}>
-            Save
-          </Button>
+          <Button
+            text="Cancel"
+            onClick={onClose}
+            variant="outline"
+            colorScheme="gray"
+            mr={3}
+          />
+          <Button text="Save" onClick={handleSave} />
         </ModalFooter>
       </ModalContent>
     </Modal>

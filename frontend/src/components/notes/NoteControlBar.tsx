@@ -1,8 +1,9 @@
 import React from "react";
-import { Box, Button, Flex, VStack } from "@chakra-ui/react";
+import { Box, Flex, VStack } from "@chakra-ui/react";
 import CustomDropdown from "../UI/CustomDropdown";
 import SearchBar from "../SearchBar";
 import { AddIcon } from "@chakra-ui/icons";
+import Button from "../UI/Button";
 
 interface NoteControlBarProps {
   onSearch: (query: string) => void;
@@ -45,14 +46,7 @@ const NoteControlBar: React.FC<NoteControlBarProps> = ({
           maxWidth="200px"
           size="sm"
         />
-        <Button
-          onClick={toggleAdding}
-          colorScheme="teal"
-          leftIcon={<AddIcon />}
-          size="sm"
-        >
-          Add Note
-        </Button>
+        <Button text="Add Note" onClick={toggleAdding} icon={<AddIcon />} />
       </Flex>
     </VStack>
   );
