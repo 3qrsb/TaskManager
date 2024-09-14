@@ -18,6 +18,7 @@ interface CustomDropdownProps<T> {
   maxWidth?: string;
   size?: string;
   allowUnselect?: boolean;
+  defaultLabel?: string;
 }
 
 const CustomDropdown = <T extends number | string>({
@@ -28,6 +29,7 @@ const CustomDropdown = <T extends number | string>({
   maxWidth = "200px",
   size = "sm",
   allowUnselect = false,
+  defaultLabel = "All",
 }: CustomDropdownProps<T>) => {
   const handleItemClick = (id: T) => {
     if (allowUnselect && selectedItem === id) {
@@ -58,7 +60,7 @@ const CustomDropdown = <T extends number | string>({
             {label ? `${label}: ` : ""}
             {selectedItem !== null
               ? items.find((item) => item.id === selectedItem)?.title
-              : "All"}
+              : defaultLabel}{" "}
           </MenuButton>
           <MenuList boxShadow="md" p={2}>
             {items.map((item, index) => (

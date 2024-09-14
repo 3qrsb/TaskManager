@@ -93,6 +93,7 @@ const TaskFormFields: React.FC<TaskFormFieldsProps> = ({
         selectedItem={taskData.category || null}
         onChange={(id) => handleInputChange("category", id)}
         allowUnselect={true}
+        defaultLabel="Select a category"
       />
     </GridItem>
 

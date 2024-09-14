@@ -19,7 +19,7 @@ export const setAuthToken = (token: string | null) => {
 };
 
 setAuthToken(
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI1Mzc1MjkxLCJpYXQiOjE3MjUyODg4OTEsImp0aSI6IjZiNGYxYWU4ODhiYzQwZmRhM2FlMmFkMmFjMjc1NDI0IiwidXNlcl9pZCI6M30._luEHZlm7591RTpPhHF8Ifk3B0yKnf-cWdKCrkNAEh0"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI2NDIzMzkyLCJpYXQiOjE3MjYzMzY5OTIsImp0aSI6IjNjNTEwOTI4MmY2ZTQ3OGJhYWZjMjVjMjcyMzgwYzViIiwidXNlcl9pZCI6M30.fmp9k2akKZBrvFKVqHNL1kbahyka9oDke9vjCAWTgaY"
 );
 
 const api = {

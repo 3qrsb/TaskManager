@@ -66,9 +66,10 @@ const TaskControlBar: React.FC<TaskControlBarProps> = ({
         <Stack direction="row" spacing={4} align="center">
           <CustomDropdown<number>
             label="Category"
-            items={[{ id: -1, title: "All" }, ...categories]}
+            items={categories}
             selectedItem={selectedCategory}
-            onChange={(id) => onCategoryChange(id !== -1 ? id : null)}
+            onChange={onCategoryChange}
+            allowUnselect={true}
           />
           <CustomDropdown<string>
             label="Sort by"
