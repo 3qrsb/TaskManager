@@ -6,8 +6,9 @@ import {
   MenuItem,
   MenuList,
   useColorModeValue,
+  Icon,
 } from "@chakra-ui/react";
-import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, ChevronUpIcon, CheckIcon } from "@chakra-ui/icons";
 
 interface CustomDropdownProps<T> {
   label?: string;
@@ -37,7 +38,7 @@ const CustomDropdown = <T extends number | string>({
   };
 
   const hoverBg = useColorModeValue("teal.100", "teal.400");
-  const colorBg = useColorModeValue("teal.200", "teal.600");
+  const checkBg = useColorModeValue("teal.500", "teal.800");
 
   return (
     <Menu>
@@ -65,12 +66,15 @@ const CustomDropdown = <T extends number | string>({
                 key={item.id}
                 onClick={() => handleItemClick(item.id)}
                 _hover={{ bg: hoverBg }}
-                bg={selectedItem === item.id ? colorBg : ""}
+                bg={selectedItem === item.id ? "" : ""}
                 borderRadius="md"
                 transition="background-color 0.2s"
                 mb={index !== items.length - 1 ? 1 : 0}
               >
                 {item.title}
+                {selectedItem === item.id && (
+                  <Icon as={CheckIcon} ml="auto" color={checkBg} boxSize={3} />
+                )}
               </MenuItem>
             ))}
           </MenuList>
